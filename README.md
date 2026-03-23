@@ -25,6 +25,8 @@
 2. **财务风险量化敏感度 (Financial Quantification)**：是否能将条文字面的法务瑕疵直接转化为预期损失（EL, Expected Loss），并结合司法调减（130%）规则遏制天价止损错觉。
 3. **对抗防御冗余强度 (Adversarial Robustness)**：提供的替换条款策略 (Plan B) 是否经得起敌方（反向立场）律师的二次漏洞攻击，并在数据局等行政监管口径下具有免罚抗辩效力。
 
+> 📊 **查看完整量化得分：** 请点击查阅 [深度测试与量化评分报告 (Analysis Report)](./Analysis_Report.md) 了解四大维度的雷达参数、ROI财务挽回估值及各版 Agent(v1.2 vs v2.0) 的满分跑分详单。
+
 ---
 
 ## 3. 基础性合同风险矩阵 (Phase I: Core Commercial Evaluators)
