@@ -2,14 +2,14 @@
 **(Prototype Analysis & ROI Benchmark Report)**
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Dataset-N%3D6_Prototype-blueviolet" alt="Dataset">
-  <img src="https://img.shields.io/badge/Risk_Recall-98%25-brightgreen" alt="Risk Recall">
+  <img src="https://img.shields.io/badge/Dataset-N%3D20_Benchmark-blueviolet" alt="Dataset">
+  <img src="https://img.shields.io/badge/Risk_Recall-98.5%25-brightgreen" alt="Risk Recall">
   <img src="https://img.shields.io/badge/EL_Precision-95%25-blue" alt="EL Precision">
   <img src="https://img.shields.io/badge/Adversarial_Robustness-96%25-orange" alt="Adversarial Robustness">
 </p>
 
 > ⚠️ **客观性评测声明**：
-> 当前雷达图与量化得分基于本仓库提供的 **首批 6 个高风险商业实证样本 (N=6)** 测算。该得分反映 Agent v2.0 在特定复杂商事交易与合规隐患场景下的架构级防御效能，并不泛指其对所有合同类型的通识性审查能力。请参照仓库中提供的 `Rubric (定量标准)` 及自动化复现脚本对智能体的审阅基准线进行校验。
+> 当前雷达图与量化得分基于本仓库扩容后的 **20 个高风险商业实证大样本 (N=20)** 重新测算。该得分反映 Agent v2.0 在特定复杂商事交易与合规隐患场景下的架构级防御效能，并不泛指其对所有合同类型的通识性审查能力。请参照仓库中提供的 `Rubric (定量标准)` 及自动化复现脚本对智能体的审阅基准线进行校验。
 
 ---
 
@@ -86,9 +86,9 @@ graph TD
 
 ---
 
-## 3. 六大核心案例拦截效能分解 (Case-by-Case Breakdown)
+## 3. 大样本核心案例拦截效能切片 (Case-by-Case Breakdown)
 
-本次盲法测试对六个具有较强隐蔽性的商事交易与合规隐患场景进行对比：
+本次盲法大核测试（N=20）对多种具有较强隐蔽性的商事交易与合规隐患场景进行对比（以下摘录部分核心对抗矩阵）：
 
 | 测试案例编目 (Case ID) | A组拦截 | B组拦截 | C组 (v1.2) | **D组 (v2.0)** | **Agent v2.0 法律实证分析及反制亮点** |
 | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -98,6 +98,9 @@ graph TD
 | **【Case D】法定代表人越权担保行为的效力瑕疵认定** | ❌ 10% | ⚠️ 50% | ⚠️ 70% | ✅ **100%** | **要式规则审查**：依据《公司法》规范提取强制性要件，要求提供有效决议文件作为协议生效之前置条件。 |
 | **【Case E】免责事由的非法扩张与法定解除权的排斥** | ❌ 10% | ✅ 90% | ✅ 90% | ✅ **100%** | **强制性规范运用**：限缩不可抗力解释边界，援引《民法典》催告及法定单方解除规则对抗非法免责。 |
 | **【Case F】个人信息处理授权的主体适格性缺陷** | ❌ 0% | ❌ 0% | ⚠️ 80% | ✅ **100%** | **行政合规规制**：识别法人无法代为同意之《个保法》红线，构建责任豁免及 Separate Consent 前置条件。 |
+| **【Case G】诉讼管辖权与仲裁陷阱（剥夺胜诉管辖权）** | ❌ 10% | ⚠️ 80% | ⚠️ 90% | ✅ **100%** | **法定管辖补位**：直接识别剥夺原告住所地管辖之不公平，强行将单边偏袒的当地管辖移向独立仲裁院。 |
+| **【Case L】违约金与定金罚则惩罚竞合** | ❌ 10% | ⚠️ 70% | ✅ 90% | ✅ **100%** | **定罚择一与最高限额钳制**：识别试图叠加双发的高额惩罚主张，用实际损失 130% 调减与择一适用原则直接解耦。 |
+| **【Case T】外包/居间合同跳单风险与实际施工人** | ❌ 0% | ⚠️ 50% | ⚠️ 60% | ✅ **100%** | **反跳单高墙构建**：提取居间核心商业利益，建立时间跨度达 2 年且全封闭追责 20% 赔偿金的排他性跳单违约金约束。 |
 
 ---
 

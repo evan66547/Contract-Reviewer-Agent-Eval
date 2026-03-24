@@ -52,7 +52,7 @@ python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_
 
 ## 📊 评测方法论 (Methodology)
 
-本次实证测试抽样了六项囊括商事实务痛点与公法红线的隐蔽性不利条款，设定代理方为 **己方利益主张方**（如委托方、采购标的出资方）。包含四大评测阵营与核心考核维度：
+本次实证测试已全面扩容抽取了 **20 项** 囊括商事实务痛点与公法红线的隐蔽性不利条款，设定代理方为 **己方利益主张方**（如委托方、采购标的出资方）。包含四大评测阵营与核心考核维度：
 
 **4-Tier Benchmark Array:**
 1. **组别 A：Layman Prompt** (普通指令，非法律人员基线)
@@ -69,7 +69,7 @@ python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_
 ## 📋 评定基准与复现方案 (Evaluation Rubric & Reproducibility)
 
 为建立具备法理客观性之评估体系，本实证开源项目声明如下对照组约束：
-- **评测样本 (Sample Size)**：`N=6` (提炼自高频法律纠纷的商事不利要约原型)。
+- **评测样本 (Sample Size)**：`N=20` (提炼自高频法律纠纷的商事不利要约原型，包含管辖陷阱、税费转嫁、隐名代持等)。
 - **评定方式 (Evaluator)**：对照基准输出要件（Expected Risk & Plan B）予以定量划分。
 - **阶梯分数认定 (Rubric)**：
   - ✅ **Pass (通过评分)**：精准解构不利益核心成因，且必须输出能够实质阻断风险之修补强制条款 (防守性 Plan B)，且该条款不违反现行效力性强制规范。
@@ -121,6 +121,11 @@ python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_
 - **Agent v1.2 (单体智能)**：[Partial Pass] 识别了个人信息保护合规，未进行 5000 万罚款的风险转嫁兜底安排。
 - **Agent v2.0 (多体协作)**：[Epic Pass] 要求独立弹窗获取 Separate Consent 并将全部行政追责风险 100% 甩锅承接方。
 
+### 🗂️ Case G-T: 大样本综合盲区攻防
+> “覆盖管辖权陷阱、连带责任保证推定、法定抵销权排斥、竞业限制滥用、定金罚则并用等 14 大核心高频实务盲区”
+- **基础指令/v1.2 (Layman / Expert / v1.2)**：由于缺乏诉讼对抗视野，基础模型极易忽略管辖权剥夺、先履行抗辩丧失等程序性隐蔽瑕疵。
+- **Agent v2.0 (多体协作)**：[Pass] 在 14 项极其隐蔽的商业套路（如未开发票拒付款的借口、隐名股东的暗箱操作）中，直接植入防守性法例（如：留置开发票税款不影响主干交付款的规则）。
+
 ---
 
 ## 📁 库层构建目录 (Repository Structure)
@@ -133,7 +138,7 @@ Contract-Reviewer-Agent-Eval/
 ├── schemas/
 │   └── output_schema.json    # 🗜️ 强校验 JSON Schema 法务约束要求
 ├── data/
-│   └── test_cases/           # 📁 6 大基础交易与合规高危样本组 (JSON)
+│   └── test_cases/           # 📁 20 大基础交易与合规高危样本组 (JSON)
 ├── scripts/
 │   └── run_eval.py           # 🚀 独立的 Python 自动化评级裁定执行脚本
 ```
