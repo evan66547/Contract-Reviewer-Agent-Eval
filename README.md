@@ -40,10 +40,12 @@ A **benchmark evaluation framework** for AI-powered legal contract review agents
 > *Note: The 84.7% metric is a theoretical architecture projection, not a commercially audited reality.
 
 ### Highlights
-- 🧠 **5-Agent Architectural Symphony (v2.1)**: Compliance, Risk Quant, Negotiation, Lifecycle, AND a newly integrated **Deal-Maker Agent** to balance extreme legal defensiveness with real-world commercial viability.
-- 🛡️ **Airtight MCP Anti-Hallucination Protocol**: Mandatory dynamic RAG integration using external legal databases to strictly enforce the "Currently Effective" (现行有效) status of all cited laws, permanently barring repealed regulations (e.g., the old Contract Law) from the output.
-- ⚖️ **25 Expert-Crafted Test Cases**: Covering penalty caps, IP disputes, cross-border trade (CISG/ICC), e-signatures, and strictly aligned with the latest 2023 Judicial Interpretations.
+- 🧠 **6-Agent Enterprise Workflow (v2.2)**: Compliance, Risk Quant, Negotiation, Lifecycle, Deal-Maker, AND a newly integrated **Agent-0 (Security & Triage)** to block prompt injections and escalate high-risk compliance exceptions (e.g., cross-border data).
+- 🔒 **Input Gating & Context Variables**: Abandons "blind reviewing". The orchestrator forces explicit context mapping before execution: `{Role}`, `{Industry}`, `{Jurisdiction}`, `{Bottom-line}`, `{Fallback}`, preventing generic templates.
+- 🛡️ **Airtight MCP Anti-Hallucination Protocol**: Mandatory dynamic RAG integration using external legal databases to strictly enforce the "Currently Effective" (现行有效) status of all cited laws.
+- 📉 **Human-in-the-Loop Escalation**: Built-in triggers for absolute red lines (anti-bribery, sanctions, privacy). The agent will refuse to generate hallucinations and flag the node for human director review.
 - ⚖️ **Blind LLM-as-a-Judge Engine**: Eradicates self-evaluating score inflation. A third-party arbiter model evaluates all outputs based on four rigorous adversarial metrics.
+- 🗄️ **Verifiable Audit Trails**: Outputs are no longer "chat responses" but structured matrices containing `Risk Tag`, `Basis`, `Confidence`, `Escalation Flag`, `Version`, and `Timestamp`.
 
 ### Quick Start
 
