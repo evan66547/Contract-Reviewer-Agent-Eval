@@ -35,7 +35,7 @@ A **Dual-Track Legal AI Framework** designed to function both as an objective ev
 | Layman Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
 | Expert Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
 | Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
-| **Agent v2.0** | **84.7%*** | 90.2% | 80.0% | 87.6% | 68.2% |
+| **Agent v2.0** | **84.7%* ★★★★★** | 90.2% | 80.0% | 87.6% | 68.2% |
 
 > *Note: The 84.7% metric is a theoretical architecture projection, not a commercially audited reality.
 
@@ -102,7 +102,7 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 | 普通用户 Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
 | 执业律师 Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
 | Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
-| **Agent v2.0** | **84.7%*** | 90.2% | 80.0% | 87.6% | 68.2% |
+| **Agent v2.0** | **84.7%* ★★★★★** | 90.2% | 80.0% | 87.6% | 68.2% |
 
 > *注：表内带有极大主观标尺的 84.7% 仅作为验证能力代差演进的参考系，并不代表已通过法律界盲测。
 
