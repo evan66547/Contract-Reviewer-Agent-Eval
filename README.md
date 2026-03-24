@@ -23,6 +23,17 @@ A **benchmark evaluation framework** for AI-powered legal contract review agents
 - ⚔️ **Generate litigation-grade replacement clauses** (Plan B Defense)
 - 📅 **Extract lifecycle milestones** for compliance monitoring
 
+### 📊 Benchmark Results (20 Cases × 4 Tiers)
+
+| Tier | Avg Score | Risk Recall | EL Precision | Plan B | Lifecycle |
+|------|:---------:|:-----------:|:------------:|:------:|:---------:|
+| Layman Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
+| Expert Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
+| Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
+| **Agent v2.0** | **84.7%** ★★★★★ | **90.2%** | **80.0%** | **87.6%** | **68.2%** |
+
+> 📈 v2.0 outperforms Layman by **6.4×** and Expert by **2.3×** in risk interception, at **1/10th** the cost of hiring lawyers. [Full Report →](./docs/4Tier_Comparison_Report.md)
+
 ### Highlights
 - 🧠 **Multi-Agent Architecture (v2.0)**: 4 specialized agents — Compliance, Risk Quant, Negotiation, Lifecycle — orchestrated by a central coordinator.
 - 🛡️ **Anti-Hallucination Protocol**: 3-tier citation verification (RAG-anchored → High-confidence memory → Forced degradation) prevents fabricated legal references.
@@ -66,6 +77,17 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 - 💰 **量化预期经济损失**，对齐中国司法裁判口径（如违约金130%调减规则）
 - ⚔️ **生成具有诉讼防御强度的替代条款**（Plan B 对抗防御力）
 - 📅 **提取合同生命周期关键节点**用于履约风控
+
+### 📊 基准测试结果 (20 案例 × 4 层级)
+
+| 层级 | 综合得分 | 召回率 | 损失量化 | Plan B | 生命周期 |
+|------|:-------:|:-----:|:-------:|:------:|:-------:|
+| 普通用户 Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
+| 执业律师 Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
+| Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
+| **Agent v2.0** | **84.7%** ★★★★★ | **90.2%** | **80.0%** | **87.6%** | **68.2%** |
+
+> 📈 v2.0 相较普通 Prompt 提升 **6.4 倍**，相较执业律师提升 **2.3 倍**，成本仅为外聘律师的 **1/10**。 [完整报告 →](./docs/4Tier_Comparison_Report.md)
 
 ### 核心亮点
 - 🧠 **多智能体协作架构 (v2.0)**：合规审核 + 风险量化 + 谈判策略 + 生命周期管理，四个专业 Agent 协同作战。
