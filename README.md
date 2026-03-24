@@ -46,9 +46,9 @@ Used strictly for automated pipeline evaluations against the 25 benchmark cases.
 
 **🏢 Enterprise Workflow Edition (v2.2 / 6-Agent Pipeline)**
 A fully independent, production-grade template detached from zero-shot automated evaluations, built for real-world legal departments.
-- **Agent-0 Security & Triage**: Blocks prompt injections and escalates high-risk exceptions (e.g., cross-border data, anti-bribery) immediately to human directors.
-- **Strict Input Gating**: Abandons generic "blind reviewing". Requires explicit pre-context mappings: `{Role}`, `{Industry}`, `{Jurisdiction}`, `{Bottom-line}`, `{Fallback}`.
-- **Verifiable Audit Trails**: Outputs are strictly formatted structural matrices containing `Risk Tag`, `Basis`, `Confidence`, `Escalation Flag`, `Version`, and `Timestamp` to seamlessly integrate with corporate IT approval flows.
+- **Agent-0 Security & Pre-Check**: Identifies and mitigates prompt injections, and actively escalates high-risk compliance exceptions (e.g., cross-border data transfer, anti-bribery) to human oversight.
+- **Contextual Input Protocols**: Prevents contextless automated reviews. Requires explicit predefined parameters: `{Role}`, `{Industry}`, `{Jurisdiction}`, `{Bottom-line}`, `{Fallback}`.
+- **Verifiable Audit Trails**: Generates strictly formatted structural deliverables containing `Risk Tag`, `Basis`, `Confidence`, `Escalation Flag`, `Version`, and `Timestamp` for seamless synchronization with corporate IT systems.
 
 ### Quick Start
 
@@ -112,10 +112,10 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 专用于支撑本仓库 4 阶基准测试的自动化评估主干。搭载合规审核、风险量化、谈判策略、生命周期四大专业角色，外加第五名**商业撮合智能体 (Deal-Maker)**。采用基于 MCP 外联网强绑定的时效性绝缘网，杜绝引用被废止的旧法。
 
 **🏢 Enterprise 生产专版 (v2.2 6-Agent Workflow)**
-针对真实企业法务部交付场景从评测线中剥离出的流水线级产品模板（不参与全自动跑分比对）。
-- **新增 Agent-0 前置风控**：在进入合规审查前，优先清扫 Prompt 注入攻击，并对反洗钱、敏感数据出境等高危领域实施“拔管熔断”。
-- **强制约束状态机**：拒绝脱离业务属性的“盲猜评审”。强制业务端输入确切的 `{我方角色}、{行业限制}、{法域法系}、{审批层级}` 等变量。
-- **结构化审计矩阵**：告别散漫的聊天式交付。强制输出包含 `风险标签`、`法源实证`、`置信度`、`升级标志`、`审查时间戳` 的全量元数据，无缝对接企业内部 OA 或 ERP 审批流。
+针对真实企业法务部交付场景部署的工作流实体（独立于测评基准运行）。
+- **包含 Agent-0 前置风控**：在进入实质合规审查前，识别并阻断 Prompt 注入攻击，并针对反洗钱、数据出境等高危合规领域触发阻断与人工升级干预程序。
+- **强约束校验输入**：防范脱离业务语境的机械审查。要求业务端明确提供 `{我方角色}、{行业限制}、{适用法域}、{审批层级}` 等核心上下文参数。
+- **结构化审计矩阵**：规范标准化交付物。强制要求输出包含 `风险标签`、`法源实证`、`置信度`、`升级标志`、`审查时间戳` 等元数据的结构化格式，以支持企业内部 OA 或 ERP 审批流的系统级集成。
 
 ### 极速起步
 
