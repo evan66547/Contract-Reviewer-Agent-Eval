@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
 Benchmark Evaluation Runner for Contract Reviewer Agent (v2.0)
+【LLM-as-a-Judge Enhanced Edition】
 Usage:
-  Mock mode:  python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_schema.json
-  Live mode:  python scripts/run_eval.py --live --model gpt-4o --input_dir data/test_cases/ --schema schemas/output_schema.json
+  Mock mode (Pipeline Check): python scripts/run_eval.py --input_dir data/test_cases/
+  Live mode (Real Score):     python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 """
 
 import os
 import json
 import glob
 import argparse
-import difflib
 from jsonschema import validate, ValidationError
 
 # ──────────────────────────────────────────────
@@ -21,64 +21,44 @@ def load_json(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-
 def save_json(filepath, data):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-
 # ──────────────────────────────────────────────
-# LLM Call (Mock + Live)
+# LLM Calls (Generator & Judge)
 # ──────────────────────────────────────────────
 
 def mock_llm_call(prompt, schema):
     """
-    Returns a hard-coded mock response for offline testing.
-    All cases will pass schema validation but receive low semantic scores.
+    Returns a fake schema-compliant response. 
+    WARNING: This does NOT represent agent performance. Used for CI/CD workflow testing ONLY.
     """
     return {
         "risk_level": "CRITICAL",
-        "identified_vulnerability": "Simulated vulnerability analysis matching expected recall...",
-        "clause_location": "(mock) N/A",
+        "identified_vulnerability": "Mock Vulnerability... (No real semantic meaning)",
+        "clause_location": "N/A",
         "expected_loss_estimation": {
-            "amount_range": "100W - 500W RMB",
-            "calculation_logic": "Simulated EL logic strictly using 130% judicial limitation."
+            "amount_range": "Mock Range",
+            "calculation_logic": "Mock Logic"
         },
-        "legal_citations": [
-            {"law_name": "《中华人民共和国民法典》", "article_number": "第五百八十四条"}
-        ],
+        "legal_citations": [{"law_name": "民法典", "article_number": "未知"}],
         "citation_verified": True,
         "confidence_degrade": "",
-        "defense_plan_b": "Simulated mandatory Plan B insertion to block the vulnerability."
+        "defense_plan_b": "Mock Plan B"
     }
 
-
 def live_llm_call(prompt, schema, model="gpt-4o"):
-    """
-    Call a real LLM (OpenAI-compatible) to generate the contract review output.
-    Requires OPENAI_API_KEY environment variable.
-    """
-    try:
-        from openai import OpenAI
-    except ImportError:
-        print("  ❌ openai package not installed. Run: pip install openai")
-        raise
-
+    """Call the Generation LLM to review the contract."""
+    from openai import OpenAI
     client = OpenAI()
     system_prompt = (
-        "你是一名具备15年经验的中国执业资深商业律师。"
-        "请严格按照提供的 JSON Schema 格式输出合同审查结果。"
-        "必须包含: risk_level, identified_vulnerability, clause_location, "
-        "expected_loss_estimation, legal_citations, citation_verified, defense_plan_b。"
-        "输出纯 JSON，不要包含 markdown 代码块标记。"
+        "你是一名具备15年经验的中国执业资深商业律师。请严格按照JSON Schema审查合同。"
+        "必须包含: risk_level, identified_vulnerability, clause_location, expected_loss_estimation, legal_citations, citation_verified, defense_plan_b。"
     )
-    user_prompt = (
-        f"请审查以下合同条款并按 JSON Schema 输出结构化风险分析：\n\n"
-        f"合同条款：\n{prompt}\n\n"
-        f"要求的输出 Schema：\n{json.dumps(schema, ensure_ascii=False, indent=2)}"
-    )
-
+    user_prompt = f"合同条款：\n{prompt}\n\n要求的输出 Schema：\n{json.dumps(schema, ensure_ascii=False)}"
+    
     response = client.chat.completions.create(
         model=model,
         messages=[
@@ -88,44 +68,44 @@ def live_llm_call(prompt, schema, model="gpt-4o"):
         temperature=0.1,
         response_format={"type": "json_object"}
     )
-
     return json.loads(response.choices[0].message.content)
 
-
-# ──────────────────────────────────────────────
-# Semantic Scoring (Recall + Plan B Quality)
-# ──────────────────────────────────────────────
-
-def compute_recall_score(agent_vuln_text, expected_recalls):
+def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
     """
-    Compute semantic recall score by checking keyword overlap
-    between the agent's vulnerability output and expected recall points.
-    Returns a score between 0.0 and 1.0.
+    Use an LLM to blindly judge the semantic quality of the agent's output against the Ground Truth.
+    This replaces the flawed difflib string-matching approach and truly evaluates "Plan B" effectiveness.
     """
-    if not expected_recalls or not agent_vuln_text:
-        return 0.0
+    from openai import OpenAI
+    client = OpenAI()
+    
+    judge_prompt = f"""
+    你是独立客观的第三方『法律基准测试裁判』。请评估受测 Agent 出具的风控报告是否真正解决了基准库(Ground Truth)中的问题。
+    请你从 0 到 100 分独立给出四个维度的打分，并严格返回 JSON 格式：
+    {{"recall_score": int, "el_precision_score": int, "adversarial_score": int, "lifecycle_score": int}}
 
-    hit_count = 0
-    for recall_point in expected_recalls:
-        # Extract key terms (4+ char segments) from the expected recall
-        key_terms = [t for t in recall_point if len(t) >= 2]
-        # Use SequenceMatcher for fuzzy substring matching
-        ratio = difflib.SequenceMatcher(None, agent_vuln_text, recall_point).ratio()
-        if ratio >= 0.25:  # Threshold: at least 25% overlap
-            hit_count += 1
+    【基准答案 (Ground Truth)】
+    期待发现的漏洞: {case_data.get('expected_vulnerability_recall', [])}
+    期待的 Plan B 防御方向: {case_data.get('expected_plan_b', '')}
 
-    return hit_count / len(expected_recalls)
+    【受测 Agent 输出】
+    识别到的漏洞: {agent_output.get('identified_vulnerability', '')}
+    预期损失估算逻辑: {json.dumps(agent_output.get('expected_loss_estimation', dict()), ensure_ascii=False)}
+    给出的 Plan B: {agent_output.get('defense_plan_b', '')}
 
-
-def compute_plan_b_score(agent_plan_b, expected_plan_b):
+    【打分规则】
+    1. recall_score (漏洞召回): Agent 是否准确识别了基准答案预期的业务/法律致命漏洞？(哪怕表述不同，语义相符即可满分)
+    2. el_precision_score (损失估算精度): Agent 的损失估算逻辑是否客观？是否有天价违约金调减意识？
+    3. adversarial_score (抗对抗防御/Plan B): Agent 写的条款是否比基准答案规定的方向更强、更滴水不漏？不要受限于文字相似度，写得越狠越完美分数越高。
+    4. lifecycle_score (生命周期): 是否指出了隐藏的期限黑洞？如无涉及但总体优秀也可酌情给高分。
     """
-    Compute Plan B quality score using string similarity.
-    Returns a score between 0.0 and 1.0.
-    """
-    if not agent_plan_b or not expected_plan_b:
-        return 0.0
-    return difflib.SequenceMatcher(None, agent_plan_b, expected_plan_b).ratio()
-
+    
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": judge_prompt}],
+        temperature=0.0,
+        response_format={"type": "json_object"}
+    )
+    return json.loads(response.choices[0].message.content)
 
 # ──────────────────────────────────────────────
 # Case Evaluator
@@ -138,14 +118,14 @@ def evaluate_case(case_data, schema, live=False, model="gpt-4o"):
 
     contract_text = case_data.get("contract_snippet", "")
 
-    # 1. Get Agent Output
+    # 1. Output Generation
     if live:
-        print("  ⏳ Calling LLM...")
+        print("  ⏳ Calling Generation LLM...")
         agent_output = live_llm_call(contract_text, schema, model)
     else:
         agent_output = mock_llm_call(contract_text, schema)
 
-    # 2. Schema Validation
+    # 2. Schema Validation (Pipeline Integrity)
     try:
         validate(instance=agent_output, schema=schema)
         print("  ✓ Schema Validation: PASSED")
@@ -154,59 +134,64 @@ def evaluate_case(case_data, schema, live=False, model="gpt-4o"):
         print(f"  ✗ Schema Validation: FAILED ({e.message})")
         schema_pass = False
 
-    # 3. Semantic Recall Score
-    expected_recalls = case_data.get("expected_vulnerability_recall", [])
-    vuln_text = agent_output.get("identified_vulnerability", "")
-    recall_score = compute_recall_score(vuln_text, expected_recalls)
-    print(f"  📊 Recall Score: {recall_score*100:.0f}%")
-
-    # 4. Plan B Quality Score
-    expected_plan_b = case_data.get("expected_plan_b", "")
-    agent_plan_b = agent_output.get("defense_plan_b", "")
-    plan_b_score = compute_plan_b_score(agent_plan_b, expected_plan_b)
-    print(f"  📊 Plan B Score: {plan_b_score*100:.0f}%")
-
-    # 5. Weighted Final Score (aligned with Analysis_Report 4-tier model)
-    #    Risk Recall 35% + EL Precision 25% (simplified) + Adversarial 30% + Lifecycle 10%
-    final_score = (recall_score * 0.45) + (plan_b_score * 0.45) + (0.1 if schema_pass else 0.0)
-    print(f"  🏆 Weighted Score: {final_score*100:.1f}%")
+    # 3. LLM-as-a-Judge Scoring
+    if live:
+        print("  ⚖️ Calling Judge LLM for Semantic Evaluation...")
+        judge_scores = llm_as_a_judge(agent_output, case_data, model="gpt-4o") # Always use strong model as judge
+        r_score = judge_scores.get("recall_score", 0)
+        e_score = judge_scores.get("el_precision_score", 0)
+        a_score = judge_scores.get("adversarial_score", 0)
+        l_score = judge_scores.get("lifecycle_score", 0)
+        
+        # Exact Weighting from the Documentation
+        final_score = (r_score * 0.35) + (e_score * 0.25) + (a_score * 0.30) + (l_score * 0.10)
+        
+        print(f"  📊 Recall (35%):  {r_score}/100")
+        print(f"  📊 EL Prec (25%): {e_score}/100")
+        print(f"  📊 Plan B (30%):  {a_score}/100")
+        print(f"  📊 Lifecyc (10%): {l_score}/100")
+        print(f"  🏆 Weighted Final: {final_score:.1f}/100")
+    else:
+        print("  ⚠️ MOCK MODE: Bypass semantic scoring. (Requires --live for real benchmarking)")
+        r_score, e_score, a_score, l_score, final_score = 0, 0, 0, 0, 0
 
     return {
         "case_id": case_id,
         "name": case_name,
         "schema_pass": schema_pass,
-        "recall_score": recall_score,
-        "plan_b_score": plan_b_score,
-        "final_score": final_score,
+        "scores": {
+            "recall": r_score,
+            "el_precision": e_score,
+            "adversarial": a_score,
+            "lifecycle": l_score,
+            "final": final_score
+        },
         "agent_output": agent_output
     }
-
 
 # ──────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="Run Benchmark Evaluation for Contract Reviewer Agent")
-    parser.add_argument("--input_dir", default="data/test_cases/", help="Directory containing JSON test cases")
-    parser.add_argument("--schema", default="schemas/output_schema.json", help="Path to JSON output schema")
-    parser.add_argument("--live", action="store_true", help="Use real LLM API instead of mock responses")
-    parser.add_argument("--model", default="gpt-4o", help="LLM model name (default: gpt-4o)")
-    parser.add_argument("--output", default=None, help="Save detailed results to JSON file")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input_dir", default="data/test_cases/")
+    parser.add_argument("--schema", default="schemas/output_schema.json")
+    parser.add_argument("--live", action="store_true", help="Use real API to generate & LLM-as-a-Judge to score")
+    parser.add_argument("--model", default="gpt-4o")
+    parser.add_argument("--output", default=None)
     args = parser.parse_args()
 
     schema = load_json(args.schema)
     test_files = sorted(glob.glob(os.path.join(args.input_dir, "*.json")))
     test_files = [f for f in test_files if not f.endswith("README.md")]
 
-    if not test_files:
-        print(f"No test cases found in {args.input_dir}")
-        return
-
-    mode_label = "🔴 LIVE" if args.live else "🟢 MOCK"
-    print(f"Mode: {mode_label} | Model: {args.model}")
-    print(f"Loaded {len(test_files)} test cases. Starting evaluation...\n")
-    print("=" * 60)
+    if not args.live:
+        print("\n" + "!"*60)
+        print("🚨 ATTENTION: Running in MOCK Mode 🚨")
+        print("Mock mode ONLY validates the execution pipeline and JSON schema.")
+        print("SCORES WILL BE 0. To evaluate AI performance, you MUST use the --live flag.")
+        print("!"*60 + "\n")
 
     results = []
     for file in test_files:
@@ -214,35 +199,27 @@ def main():
         result = evaluate_case(case_data, schema, live=args.live, model=args.model)
         results.append(result)
 
-    # Summary
     passed = sum(1 for r in results if r["schema_pass"])
-    avg_recall = sum(r["recall_score"] for r in results) / len(results) * 100
-    avg_plan_b = sum(r["plan_b_score"] for r in results) / len(results) * 100
-    avg_final = sum(r["final_score"] for r in results) / len(results) * 100
+    if args.live:
+        avg_r = sum(r["scores"]["recall"] for r in results) / len(results)
+        avg_e = sum(r["scores"]["el_precision"] for r in results) / len(results)
+        avg_a = sum(r["scores"]["adversarial"] for r in results) / len(results)
+        avg_l = sum(r["scores"]["lifecycle"] for r in results) / len(results)
+        avg_final = sum(r["scores"]["final"] for r in results) / len(results)
 
-    print("\n" + "=" * 60)
-    print("📊 Benchmark Summary")
-    print("=" * 60)
-    print(f"  Total Cases     : {len(test_files)}")
-    print(f"  Schema Passed   : {passed}/{len(test_files)}")
-    print(f"  Avg Recall      : {avg_recall:.1f}%")
-    print(f"  Avg Plan B      : {avg_plan_b:.1f}%")
-    print(f"  Avg Final Score : {avg_final:.1f}%")
-    print("=" * 60)
+        print("\n" + "=" * 60)
+        print("📊 Benchmark Summary [LLM-as-a-Judge Evaluation]")
+        print("=" * 60)
+        print(f"  Schema Valid    : {passed}/{len(test_files)}")
+        print(f"  [35%] Recall    : {avg_r:.1f}")
+        print(f"  [25%] EL Precis : {avg_e:.1f}")
+        print(f"  [30%] Def/PlanB : {avg_a:.1f}")
+        print(f"  [10%] Lifecycle : {avg_l:.1f}")
+        print(f"  🏆 Overall Score : {avg_final:.1f}/100")
+        print("=" * 60)
 
-    # Save results
     if args.output:
-        save_json(args.output, {
-            "mode": "live" if args.live else "mock",
-            "model": args.model,
-            "total_cases": len(test_files),
-            "avg_recall": round(avg_recall, 1),
-            "avg_plan_b": round(avg_plan_b, 1),
-            "avg_final_score": round(avg_final, 1),
-            "cases": results
-        })
-        print(f"\n💾 Detailed results saved to: {args.output}")
-
+        save_json(args.output, results)
 
 if __name__ == "__main__":
     main()
