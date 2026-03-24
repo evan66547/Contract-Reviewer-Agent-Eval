@@ -17,11 +17,11 @@
 ## 🇬🇧 English
 
 ### What is this?
-A **benchmark evaluation framework** for AI-powered legal contract review agents. It tests whether an LLM/Agent can:
+A **Dual-Track Legal AI Architecture** serving both as a rigorous benchmark evaluation engine and a production-grade enterprise workflow. It tests and implements whether an LLM/Agent pipeline can:
 - 🔍 **Detect hidden legal vulnerabilities** in commercial contract clauses (Risk Recall)
 - 💰 **Quantify expected financial losses** using Chinese judicial standards (EL Precision)
 - ⚔️ **Generate litigation-grade replacement clauses** (Plan B Defense)
-- 📅 **Extract lifecycle milestones** for compliance monitoring
+- 📅 **Extract lifecycle milestones** seamlessly into corporate compliance flows
 
 ### 📊 Capability Evolution Matrix (Internal R&D Validation Only)
 
@@ -84,11 +84,11 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 ## 🇨🇳 中文
 
 ### 这是什么？
-一个面向 **AI 法律合同审查智能体** 的基准测试评估框架。它检验 LLM/Agent 能否：
-- 🔍 **识别商业合同中的隐蔽法律漏洞**（红线召回率）
-- 💰 **量化预期经济损失**，对齐中国司法裁判口径（如违约金130%调减规则）
-- ⚔️ **生成具有诉讼防御强度的替代条款**（Plan B 对抗防御力）
-- 📅 **提取合同生命周期关键节点**用于履约风控
+一个**「双轨制」法务 AI 架构**：既是一个极其严苛的评估基准测试引擎（Benchmark），也是一套随时可接入大厂审批流的生产级企业工作流（Enterprise Workflow）。它检验并实现 AI 能否：
+- 🔍 **精准狙击商业合同中的隐蔽法律漏洞**（红线召回突破）
+- 💰 **动态量化预期经济损失**，硬核对齐中国司法裁判口径（如违约金130%最高法调减规则）
+- ⚔️ **生成具有诉讼防御强度的替代条款**（Plan B 进攻性防御策略）
+- 📅 **提取合同生命周期节点**，无缝对接企业 ERP/OA 风控流
 
 ### 📊 研发框架下的能力代差验证 (非商业成绩证明)
 
