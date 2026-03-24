@@ -23,16 +23,21 @@ A **benchmark evaluation framework** for AI-powered legal contract review agents
 - ⚔️ **Generate litigation-grade replacement clauses** (Plan B Defense)
 - 📅 **Extract lifecycle milestones** for compliance monitoring
 
-### 📊 Benchmark Results (20 Cases × 4 Tiers)
+### 📊 Capability Evolution Matrix (Internal R&D Validation Only)
+
+> 🛑 **Liability & Compliance Disclaimer**
+> 
+> 1. **Internal Projections Only**: The baseline metrics below were generated under a strictly **"Self-Evaluated + Self-Scored + Unaudited by Third Parties"** internal architecture simulation. They **MUST NOT** be utilized as official commercial capability proofs, marketing claims (e.g., "84.7% Success Rate"), or compliance endorsements to clients or regulatory bodies.
+> 2. **High-Adversarial Domains**: If deploying this framework in high-stakes, highly adversarial scenarios (e.g., M&A, Financial Derivatives, IP Litigation), implementers **MUST** manually integrate Prompt Injection and adversarial attack test cases. A distinct "Adversarial Defense Rate" must be evaluated and declared as an independent risk metric.
 
 | Tier | Avg Score | Risk Recall | EL Precision | Plan B | Lifecycle |
 |------|:---------:|:-----------:|:------------:|:------:|:---------:|
 | Layman Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
 | Expert Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
 | Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
-| **Agent v2.0** | **84.7%** ★★★★★ | **90.2%** | **80.0%** | **87.6%** | **68.2%** |
+| **Agent v2.0** | **84.7%*** | 90.2% | 80.0% | 87.6% | 68.2% |
 
-> 📈 v2.0 outperforms Layman by **6.4×** and Expert by **2.3×** in risk interception, at **1/10th** the cost of hiring lawyers. [Full Report →](./docs/4Tier_Comparison_Report.md)
+> *Note: The 84.7% metric is a theoretical architecture projection, not a commercially audited reality.
 
 ### Highlights
 - 🧠 **Multi-Agent Architecture (v2.0)**: 4 specialized agents — Compliance, Risk Quant, Negotiation, Lifecycle — orchestrated by a central coordinator.
@@ -80,16 +85,21 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 - ⚔️ **生成具有诉讼防御强度的替代条款**（Plan B 对抗防御力）
 - 📅 **提取合同生命周期关键节点**用于履约风控
 
-### 📊 基准测试结果 (20 案例 × 4 层级)
+### 📊 研发框架下的能力代差验证 (非商业成绩证明)
 
-| 层级 | 综合得分 | 召回率 | 损失量化 | Plan B | 生命周期 |
+> 🛑 **实盘应用与合规免责声明 (Liability Disclaimer)**
+> 
+> 1. **禁止营销宣示**：下表数据为早期开发过程中基于 **“自评 + 自打分 + 无第三方审计”** 体系下生成的理论架构投影。**绝对禁止**将其（如宣称“84.7%胜率”）作为对客户、监管机构或第三方的“AI 能力定性证明”或“合规背书”进行营销使用。
+> 2. **高危环境的独立对抗指标**：若将本框架用于**高对抗性业务**（如：并购对赌、金融衍生品、商业密码及知识产权诉讼等敏感条款），使用者**必须**自行增补“Prompt Injection（提示词注入）”与“逻辑陷阱攻击”等对抗性测试用例，并将“对抗防御通过率”作为一个绝对独立的风控指标进行公示，严禁套用常规文本胜率掩盖风险。
+
+| 层级 | 综合得分（理论值） | 召回率 | 损失量化 | Plan B | 生命周期 |
 |------|:-------:|:-----:|:-------:|:------:|:-------:|
 | 普通用户 Prompt | 11.4% ★☆☆☆☆ | 19.4% | 7.3% | 10.2% | 4.8% |
 | 执业律师 Prompt | 36.8% ★★★☆☆ | 49.2% | 29.7% | 38.6% | 12.9% |
 | Agent v1.2 | 61.7% ★★★★☆ | 73.2% | 55.3% | 64.6% | 28.3% |
-| **Agent v2.0** | **84.7%** ★★★★★ | **90.2%** | **80.0%** | **87.6%** | **68.2%** |
+| **Agent v2.0** | **84.7%*** | 90.2% | 80.0% | 87.6% | 68.2% |
 
-> 📈 v2.0 相较普通 Prompt 提升 **6.4 倍**，相较执业律师提升 **2.3 倍**，成本仅为外聘律师的 **1/10**。 [完整报告 →](./docs/4Tier_Comparison_Report.md)
+> *注：表内带有极大主观标尺的 84.7% 仅作为验证能力代差演进的参考系，并不代表已通过法律界盲测。
 
 ### 核心亮点
 - 🧠 **多智能体协作架构 (v2.0)**：合规审核 + 风险量化 + 谈判策略 + 生命周期管理，四个专业 Agent 协同作战。
