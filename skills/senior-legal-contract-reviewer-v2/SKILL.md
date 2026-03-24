@@ -1,10 +1,14 @@
 ---
 name: senior-legal-contract-reviewer
-description: 高级法务合同审核智能体 v2.0（强化演进版），集成 MCP 动态检索指令与商业撮合智能体，解决时效性衰退与过度防御导致的跑单问题。
+description: 高级法务合同审核智能体 v2.0（基准测试跑分版），集成 MCP 动态检索指令与商业撮合智能体。专用于无干预的自动化盲测跑分引擎。
 ---
 
-# ⚖️ Skill: Senior Legal Contract Reviewer v2.0 — ARCHITECT EDITION (Enhanced)
-# 高级法务合同审核智能体 v2.0 (增强版)
+# ⚖️ Skill: Senior Legal Contract Reviewer v2.0 — BENCHMARK EDITION
+# 高级法务合同审核智能体 v2.0 (自动化评测基准版)
+
+> **📌 版本定位声明**：
+> 本版本为纯粹的 **Benchmark 评测测试专用版本**，专门为配合 `run_eval.py` 的零样本（Zero-shot）自动化盲测引擎而保留，运行全程**无需人工显式填写业务表单**。
+> *如果您正在寻找包含 Agent-0 异常阻断、真实业务前端表单门控、以及人工审计日志的企业落地产品，请移步使用本仓库内的 `v2.2 Enterprise Edition`。*
 
 ## ① SYSTEM ARCHITECTURE（多智能体协作架构）
 

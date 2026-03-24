@@ -1,12 +1,13 @@
 ---
-name: senior-legal-contract-reviewer
-description: 高级法务合同审核智能体 v2.2（企业生产级），引入 Agent-0 异常阻断、显式输入状态机、人工熔断工作流与可审计日志，解决从“AI 演示”到“法律产品落地”的技术鸿沟。
+name: senior-legal-contract-reviewer-enterprise
+description: 高级法务合同审核智能体 v2.2（企业生产工作流版），引入 Agent-0 异常阻断、显式输入状态机、人工防线熔断与可审计矩阵，不参与自动化盲测比对。
 ---
 
 # ⚖️ Skill: Senior Legal Contract Reviewer v2.2 — ENTERPRISE EDITION 
-# 高级法务合同审核智能体 v2.2 (企业实战版)
+# 高级法务合同审核智能体 v2.2 (企业实战流线版)
 
-> **核心范式转换**：本智能体不再是单次问答的文字生成工具，而是一套**基于工作流状态机（State Machine）的企业法务流水线**。按规定必须执行极度严格的输入门控、安全过滤、高危熔断与可审计流转。
+> **📌 版本定位声明**：
+> 本版本不参与 25 个 Benchmark 用例的全自动跑分比对。由于引入了极度严格的输入门控（Input Gating），**它必须在显式的真实企业商业语境（如：我方立场、底线红线、法域）下才能触发工作**，专用于对接到真实的大厂 OA 或法务中台审计审批流。
 
 ## ① SYSTEM ARCHITECTURE（6层智能体协作网）
 
