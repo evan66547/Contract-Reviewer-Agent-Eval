@@ -40,10 +40,10 @@ A **benchmark evaluation framework** for AI-powered legal contract review agents
 > *Note: The 84.7% metric is a theoretical architecture projection, not a commercially audited reality.
 
 ### Highlights
-- 🧠 **Multi-Agent Architecture (v2.0)**: 4 specialized agents — Compliance, Risk Quant, Negotiation, Lifecycle — orchestrated by a central coordinator.
-- 🛡️ **Anti-Hallucination Protocol**: 3-tier citation verification (RAG-anchored → High-confidence memory → Forced degradation) prevents fabricated legal references.
-- ⚖️ **25 Expert-Crafted Test Cases**: Covering penalty caps, IP disputes, cross-border trade (CISG/ICC), e-signatures, and 2023 Judicial Interpretation hot topics.
-- 📊 **Weighted Scoring Model**: Recall (35%) + EL Precision (25%) + Adversarial Robustness (30%) + Lifecycle (10%).
+- 🧠 **5-Agent Architectural Symphony (v2.1)**: Compliance, Risk Quant, Negotiation, Lifecycle, AND a newly integrated **Deal-Maker Agent** to balance extreme legal defensiveness with real-world commercial viability.
+- 🛡️ **Airtight MCP Anti-Hallucination Protocol**: Mandatory dynamic RAG integration using external legal databases to strictly enforce the "Currently Effective" (现行有效) status of all cited laws, permanently barring repealed regulations (e.g., the old Contract Law) from the output.
+- ⚖️ **25 Expert-Crafted Test Cases**: Covering penalty caps, IP disputes, cross-border trade (CISG/ICC), e-signatures, and strictly aligned with the latest 2023 Judicial Interpretations.
+- ⚖️ **Blind LLM-as-a-Judge Engine**: Eradicates self-evaluating score inflation. A third-party arbiter model evaluates all outputs based on four rigorous adversarial metrics.
 
 ### Quick Start
 
@@ -101,11 +101,11 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 
 > *注：表内带有极大主观标尺的 84.7% 仅作为验证能力代差演进的参考系，并不代表已通过法律界盲测。
 
-### 核心亮点
-- 🧠 **多智能体协作架构 (v2.0)**：合规审核 + 风险量化 + 谈判策略 + 生命周期管理，四个专业 Agent 协同作战。
-- 🛡️ **三级反幻觉协议**：RAG 锚定 → 高置信记忆引用 → 强制降级处理，从根源上杜绝"编造法条"。
-- ⚖️ **25 个专家级测试用例**：覆盖违约金限额、竞业限制、知识产权归属、跨境 CISG/ICC 仲裁、电子签名争议、2023 年《合同编通则司法解释》新规等高频实务热点。
-- 📊 **加权评分模型**：召回率 (35%) + 损失量化精度 (25%) + 对抗防御力 (30%) + 生命周期 (10%)。
+### 核心亮点 (Core Features)
+- 🧠 **5大特种智能体协同 (v2.1架构)**：不仅涵盖合规审核、风险量化、谈判策略、生命周期管理，更**新增了「第五人：Deal-Maker商业撮合智能体」**，彻底解决由于法务防守过度导致交易黄单的“业务痛点”。
+- 🛡️ **基于 MCP 的时效性绝缘网**：废弃单纯依靠模型记忆的三级协议，强绑定外接法律数据库的 MCP 联网检索能力，**绝对强制核验法条的「现行有效」状态**，从根源上将已被废止的《合同法》、《担保法》等旧法永久踢出采信池。
+- ⚖️ **行业深水区实战用例**：25 个专家级高度浓缩样本，涵盖违约金限额、竞业限制、知识产权归属、跨境 CISG/ICC 仲裁、电子签名争议、实控人越权等深水区对抗场景。
+- 📊 **LLM-as-a-Judge 纯净盲测引擎**：粉碎自言自语式的评分闭环。用独立第三方大模型充当铁面无私的“法官”，对对抗防御和实际量损进行无人工干预的纯语义独立裁决。
 
 ### 极速起步
 
