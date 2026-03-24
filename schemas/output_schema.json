@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentContractReviewOutput",
+  "description": "Output schema for the Senior Legal Contract Reviewer Agent v2.0 benchmark cases.",
+  "type": "object",
+  "properties": {
+    "risk_level": {
+      "type": "string",
+      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "SAFE"],
+      "description": "Overall risk severity of the analyzed clause."
+    },
+    "identified_vulnerability": {
+      "type": "string",
+      "description": "Detailed explanation of the hidden legal or commercial trap."
+    },
+    "expected_loss_estimation": {
+      "type": "object",
+      "properties": {
+        "amount_range": {
+          "type": "string",
+          "description": "Estimated financial exposure range (e.g., '100W - 200W RMB')."
+        },
+        "calculation_logic": {
+          "type": "string",
+          "description": "Logic for calculating EL, including judicial adjustment rules (e.g. 130% rule)."
+        }
+      },
+      "required": ["amount_range", "calculation_logic"]
+    },
+    "legal_citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "law_name": { "type": "string" },
+          "article_number": { "type": "string" }
+        },
+        "required": ["law_name"]
+      },
+      "description": "Specific laws or regulations cited as defense basis."
+    },
+    "citation_verified": {
+      "type": "boolean",
+      "description": "MUST BE TRUE if the citation was actively verified via RAG/Internet. FALSE if hallucinated or purely from LLM memory."
+    },
+    "confidence_degrade": {
+      "type": "string",
+      "description": "If citation_verified is false, explicitly state the memory-degradation warning."
+    },
+    "defense_plan_b": {
+      "type": "string",
+      "description": "The mandatory, unyielding replacement clause (Plan B) to protect the user's interests."
+    }
+  },
+  "required": [
+    "risk_level",
+    "identified_vulnerability",
+    "expected_loss_estimation",
+    "legal_citations",
+    "citation_verified",
+    "defense_plan_b"
+  ]
+}

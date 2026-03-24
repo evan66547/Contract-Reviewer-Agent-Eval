@@ -45,10 +45,10 @@ git clone https://github.com/evan66547/Contract-Reviewer-Agent-Eval.git
 cd Contract-Reviewer-Agent-Eval
 
 # 2. 赋予评测脚本执行权限
-chmod +x scripts/run_eval.sh
+chmod +x scripts/run_eval.py
 
-# 3. 运行基准测试 (Placeholder 演示)
-./scripts/run_eval.sh
+# 3. 运行基准测试 (Python Runner)
+python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_schema.json
 ```
 
 ---
@@ -64,6 +64,22 @@ chmod +x scripts/run_eval.sh
 > 📈 **[查看核心测评报告]**：  
 > - 🏅 **跑分与 ROI 综述**：[深度测试与量化评分报告 (Analysis Report)](./docs/Analysis_Report.md)  
 > - ⚔️ **防杠博弈实录原件**：[六大高危商业雷区对抗明细 (Detailed Case Studies)](./docs/Detailed_Case_Studies.md)
+
+---
+
+## 📋 评测标准与可复现性 (Evaluation Rubric & Reproducibility)
+
+为确保评测的严谨性与消除过度宣发，本次开源基准测试明确以下实验配置：
+- **测试样本 (Sample Size)**：`N=6` (精选高频且极度隐蔽的商业雷区原型案例)。
+- **评测方法 (Evaluator)**：基于事先预设的标准输出桩（Expected Risk & Plan B）进行双盲对比测试。
+- **打分规则 (Rubric)**：
+  - ✅ **Pass (通过)**：不仅 100% 精准识别风险，且必须给出可用作诉讼防御防线的强制性替代条款 (Plan B)。
+  - ⚠️ **Partial Pass (部分通过)**：能识别风险概念，但给出的修改意见为无效的软性废话（如“建议双方友好协商”、“争取删除”）。
+  - ❌ **Fail (失败)**：完全未命中红线，或给出的建议触碰了《民法典》等其他强制规则导致实质失效。
+- **开源复现 (Reproduce)**：所有输入语料及预期输出格式已在 `data/test_cases/` 沉淀为标准 JSON 数据集，可使用配套解析脚本验证：
+  ```bash
+  python scripts/run_eval.py --input_dir data/test_cases/ --schema schemas/output_schema.json
+  ```
 
 ---
 
@@ -110,10 +126,12 @@ Contract-Reviewer-Agent-Eval/
 ├── README.md                 # 横向测评概述与总体结论
 ├── docs/                     
 │   └── Analysis_Report.md    # 📊 深度测试与量化评分报告 (雷达图/ROI分析)
+├── schemas/
+│   └── output_schema.json    # 🗜️ 强校验 JSON Schema 规范约束
 ├── data/
-│   └── test_cases/           # 📁 6 大核心高频风险特型盲修语料占位
+│   └── test_cases/           # 📁 6 大核心高频风险特型盲修语料 (Case A to F)
 ├── scripts/
-│   └── run_eval.sh           # 🚀 自动化测评调用执行脚本占位
+│   └── run_eval.py           # 🚀 独立的 Python 自动化基准测试评分桩
 └── assets/                   # 🖼️ 存放高维架构图、测评证据媒体文件
 ```
 
