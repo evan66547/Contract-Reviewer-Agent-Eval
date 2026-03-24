@@ -13,6 +13,10 @@
       "type": "string",
       "description": "Detailed explanation of the hidden legal or commercial trap."
     },
+    "clause_location": {
+      "type": "string",
+      "description": "The exact clause text or location reference from the contract that triggers this vulnerability."
+    },
     "expected_loss_estimation": {
       "type": "object",
       "properties": {
@@ -55,6 +59,7 @@
   "required": [
     "risk_level",
     "identified_vulnerability",
+    "clause_location",
     "expected_loss_estimation",
     "legal_citations",
     "citation_verified",
