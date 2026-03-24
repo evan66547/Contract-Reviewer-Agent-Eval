@@ -108,6 +108,7 @@ graph TD
 ## 🔗 快速导航 (Quick Links)
 
 - 🔙 [返回项目主页 (README)](../README.md)
+- ⚔️ **[查看六大高危商业雷区对抗实录 (Detailed Case Studies)](./Detailed_Case_Studies.md)**
 - 📁 [查看详细盲测案例库 (Test Cases)](../data/test_cases/)
 - 🚀 [运行测评自动化脚本 (Run Eval)](../scripts/run_eval.sh)
 

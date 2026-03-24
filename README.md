@@ -61,7 +61,9 @@ chmod +x scripts/run_eval.sh
 2. **财务风险量化敏感度 (Financial Quantification)**
 3. **对抗防御冗余强度 (Adversarial Robustness)**
 
-> 📈 **[查看完整量化得分]**：请点击查阅 **[深度测试与量化评分报告 (Analysis Report)](./docs/Analysis_Report.md)** 了解四大维度的雷达图参数、ROI 财务挽回估值及各版 Agent 的满分跑分详单。
+> 📈 **[查看核心测评报告]**：  
+> - 🏅 **跑分与 ROI 综述**：[深度测试与量化评分报告 (Analysis Report)](./docs/Analysis_Report.md)  
+> - ⚔️ **防杠博弈实录原件**：[六大高危商业雷区对抗明细 (Detailed Case Studies)](./docs/Detailed_Case_Studies.md)
 
 ---
 
