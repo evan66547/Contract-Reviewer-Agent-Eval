@@ -56,6 +56,8 @@ export OPENAI_API_KEY="sk-..."
 python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 ```
 
+> 🌐 **Not a developer?** You can easily run the v2.0 agent on the web browser for free. Read the [No-Code Guide for Gemini Web](./docs/Gemini_Web_Usage_Guide.md).
+
 ### Repository Structure
 ```
 ├── skills/                      # Agent Skill Prompts (v1.2 + v2.0)
@@ -110,6 +112,8 @@ python scripts/run_eval.py
 export OPENAI_API_KEY="sk-..."
 python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 ```
+
+> 🌐 **非技术人员/律师/法务看这里**：无需配置代码！您可以直接在浏览器中使用网页版大模型（如 Gemini）加载运行 v2.0 智能体。👉 [点击查看：网页端零代码使用指南](./docs/Gemini_Web_Usage_Guide.md)
 
 ### 架构图
 
