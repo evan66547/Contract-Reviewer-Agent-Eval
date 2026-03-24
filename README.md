@@ -40,12 +40,15 @@ A **benchmark evaluation framework** for AI-powered legal contract review agents
 > *Note: The 84.7% metric is a theoretical architecture projection, not a commercially audited reality.
 
 ### Highlights
-- 🧠 **6-Agent Enterprise Workflow (v2.2)**: Compliance, Risk Quant, Negotiation, Lifecycle, Deal-Maker, AND a newly integrated **Agent-0 (Security & Triage)** to block prompt injections and escalate high-risk compliance exceptions (e.g., cross-border data).
-- 🔒 **Input Gating & Context Variables**: Abandons "blind reviewing". The orchestrator forces explicit context mapping before execution: `{Role}`, `{Industry}`, `{Jurisdiction}`, `{Bottom-line}`, `{Fallback}`, preventing generic templates.
-- 🛡️ **Airtight MCP Anti-Hallucination Protocol**: Mandatory dynamic RAG integration using external legal databases to strictly enforce the "Currently Effective" (现行有效) status of all cited laws.
-- 📉 **Human-in-the-Loop Escalation**: Built-in triggers for absolute red lines (anti-bribery, sanctions, privacy). The agent will refuse to generate hallucinations and flag the node for human director review.
-- ⚖️ **Blind LLM-as-a-Judge Engine**: Eradicates self-evaluating score inflation. A third-party arbiter model evaluates all outputs based on four rigorous adversarial metrics.
-- 🗄️ **Verifiable Audit Trails**: Outputs are no longer "chat responses" but structured matrices containing `Risk Tag`, `Basis`, `Confidence`, `Escalation Flag`, `Version`, and `Timestamp`.
+
+**🎓 Benchmark Edition (v2.0 / 5-Agent Architecture)**
+Used strictly for automated pipeline evaluations against the 25 benchmark cases. Includes Compliance, Risk Quant, Negotiation, Lifecycle, and a Deal-Maker Agent to balance legal defensiveness with commercial viability. Employs a firm MCP Anti-Hallucination Protocol to fetch "Currently Effective" laws, permanently barring repealed regulations.
+
+**🏢 Enterprise Workflow Edition (v2.2 / 6-Agent Pipeline)**
+A fully independent, production-grade template detached from zero-shot automated evaluations, built for real-world legal departments.
+- **Agent-0 Security & Triage**: Blocks prompt injections and escalates high-risk exceptions (e.g., cross-border data, anti-bribery) immediately to human directors.
+- **Strict Input Gating**: Abandons generic "blind reviewing". Requires explicit pre-context mappings: `{Role}`, `{Industry}`, `{Jurisdiction}`, `{Bottom-line}`, `{Fallback}`.
+- **Verifiable Audit Trails**: Outputs are strictly formatted structural matrices containing `Risk Tag`, `Basis`, `Confidence`, `Escalation Flag`, `Version`, and `Timestamp` to seamlessly integrate with corporate IT approval flows.
 
 ### Quick Start
 
@@ -104,12 +107,15 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 > *注：表内带有极大主观标尺的 84.7% 仅作为验证能力代差演进的参考系，并不代表已通过法律界盲测。
 
 ### 核心亮点 (Core Features)
-- 🧠 **6大特种智能体工作流 (v2.2 企业级架构)**：新增 **「Agent-0：前置风控与异常对抗」**。在进入合规审核前，优先清扫 Prompt 注入攻击，并应对反洗钱、数据出境等高危领域实施“拔管熔断”。
-- 🔒 **强制输入门控状态机**：拒绝脱离业务的“盲猜评审”。强制要求业务端输入 `{我方角色}、{行业限制}、{法域}、{商业底线}、{审批层级}`，实现“千企千面”的定制化风险阈值。
-- 🛡️ **基于 MCP 的时效性绝缘网**：废弃单纯依靠模型记忆的三级协议，强绑定外接法律数据库的 MCP 联网检索能力，**绝对强制核验法条的「现行有效」状态**。
-- 📉 **硬性拒答与人工升级 (Escalation)**：针对触碰刑法、商业贿赂或制裁名单的绝对红线，AI 将拒绝输出“伪法务建议”，强制挂载 `[🚨 需人工复核]` 路由节点。
-- 🗄️ **结构化可审计交互印记**：彻底告别散漫的聊天回复，强制输出包含 `风险标签`、`法源实证`、`置信度`、`升级标志`、`版本与时间戳` 的全量元数据审计表单，无缝对接企业内部审批流。
-- 📊 **LLM-as-a-Judge 纯净盲测引擎**：粉碎自言自语式的评分闭环。用独立第三方大模型充当“法官”，对对抗防御和实际量损进行纯语义独立裁决。
+
+**🎓 Benchmark 跑分专版 (v2.0 5-Agent Framework)**
+专用于支撑本仓库 4 阶基准测试的自动化评估主干。搭载合规审核、风险量化、谈判策略、生命周期四大专业角色，外加第五名**商业撮合智能体 (Deal-Maker)**。采用基于 MCP 外联网强绑定的时效性绝缘网，杜绝引用被废止的旧法。
+
+**🏢 Enterprise 生产专版 (v2.2 6-Agent Workflow)**
+针对真实企业法务部交付场景从评测线中剥离出的流水线级产品模板（不参与全自动跑分比对）。
+- **新增 Agent-0 前置风控**：在进入合规审查前，优先清扫 Prompt 注入攻击，并对反洗钱、敏感数据出境等高危领域实施“拔管熔断”。
+- **强制约束状态机**：拒绝脱离业务属性的“盲猜评审”。强制业务端输入确切的 `{我方角色}、{行业限制}、{法域法系}、{审批层级}` 等变量。
+- **结构化审计矩阵**：告别散漫的聊天式交付。强制输出包含 `风险标签`、`法源实证`、`置信度`、`升级标志`、`审查时间戳` 的全量元数据，无缝对接企业内部 OA 或 ERP 审批流。
 
 ### 极速起步
 
