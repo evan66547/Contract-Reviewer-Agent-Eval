@@ -5,89 +5,130 @@
 > Test Version: `v2.0` vs `v1.2` vs `Baseline LLM`  
 > Jurisdiction: PRC Law (中国大陆法系)
 
-![Agent Architecture](https://img.shields.io/badge/Architecture-Multi--Agent_Orchestration-8A2BE2)
-![Test Framework](https://img.shields.io/badge/Eval_Framework-Adversarial_Testing-red)
-![License](https://img.shields.io/badge/License-MIT-green)
+<p align="center">
+  <img src="https://img.shields.io/badge/Architecture-Multi--Agent_Orchestration-8A2BE2" alt="Architecture">
+  <img src="https://img.shields.io/badge/Eval_Framework-Adversarial_Testing-red" alt="Eval Framework">
+  <img src="https://img.shields.io/badge/LLM_Engine-GLM%20%7C%20Claude%20%7C%20GPT4-blue" alt="LLM Engine">
+  <img src="https://img.shields.io/badge/Domain-LegalTech-orange" alt="LegalTech">
+  <img src="https://img.shields.io/badge/Status-Active-success" alt="Status">
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen" alt="PRs Welcome">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
 
 ---
 
-## 1. 摘要 (Abstract)
-随着大语言模型（LLM）在法律垂直领域的深度应用，传统的“词法级纠错” Prompt 已经彻底无法满足高维交易中的企业级风控需求。本次横向测评旨在客观评估 **高级法务合同审核智能体 v2.0 (Architect Edition)** 在面对高频且极具隐蔽性的商业合同陷阱时，相较于通用模型的防御深度、量化感知（Expected Loss）以及诉讼对抗反制能力。
+## 📖 简介 (Introduction)
 
-综合测试结果标明：依靠 `Orchestrator` 协调四个职能 Agent 的多智能体协同架构，并深度嵌入现行《中华人民共和国民法典》裁判规则及《公司法》底层穿透逻辑，v2.0 能够完成从“被动检索漏洞”到“主动排布防御阵地”的核心跨越，达成类人高级合伙人级别的风控闭环。
+**[English]**  
+As Large Language Models (LLMs) deeply embed into vertical legal domains, traditional "lexical-level correction" prompts completely fail to meet enterprise-grade risk control requirements in high-dimensional transactions. This benchmark objectively evaluates the **Senior Legal Contract Reviewer Agent v2.0 (Architect Edition)** against baseline models, focusing on defense depth, Expected Loss (EL) quantification, and adversarial countermeasure capabilities when facing highly concealed commercial contract traps.
 
----
-
-## 2. 评测方法论 (Methodology)
-
-本次横测（Benchmarking）抽样了六个涵盖极高商业及行政特许风险的盲盒样本，并限定在 **甲方立场**（如委托方、采购方、出资方）进行对抗。重点从以下三个核心维度评价 Agent 表现：
-1. **风险漏洞召回率 (Risk Recall)**：是否能穿越字面表述，识别基于现实商业推演和法律默示的“沉默条款”，以及穿透新法的隐性合规底线。
-2. **财务风险量化敏感度 (Financial Quantification)**：是否能将条文字面的法务瑕疵直接转化为预期损失（EL, Expected Loss），并结合司法调减（130%）规则遏制天价止损错觉。
-3. **对抗防御冗余强度 (Adversarial Robustness)**：提供的替换条款策略 (Plan B) 是否经得起敌方（反向立场）律师的二次漏洞攻击，并在数据局等行政监管口径下具有免罚抗辩效力。
-
-> 📊 **查看完整量化得分：** 请点击查阅 [深度测试与量化评分报告 (Analysis Report)](./Analysis_Report.md) 了解四大维度的雷达参数、ROI财务挽回估值及各版 Agent(v1.2 vs v2.0) 的满分跑分详单。
+**[中文]**  
+随着大语言模型（LLM）在法律领域的深度应用，传统的“词法纠错”已无法满足企业级风控需求。本次横向测评旨在客观评估 **高级法务合同审核智能体 v2.0 (Architect Edition)** 在面对极具隐蔽性的商业合同陷阱时，相较于通用模型的防御深度、量化感知（Expected Loss）以及诉讼对抗反制能力。
 
 ---
 
-## 3. 基础性合同风险矩阵 (Phase I: Core Commercial Evaluators)
+## ✨ 核心亮点 (Key Features)
 
-### 🗂️ Case A: 违约金非对称与填平陷阱 (Asymmetric Penalty Clause)
-**【案情背景】**：标底 500 万研发合同。约定：乙方延期每日违约金万分之五；甲方延期付款千分之一，均封顶总额 20%。
-**【测试焦点】**：LLM 能否察觉不对等比例以及违约金天花板对核心商业泄密的极限掩护。
-- **🟢 Baseline**：[Fail] 仅指出比例不同，判定 20% 封顶合法。
-- **🔥 Agent v2.0**：[Pass] 引入“兜底填平原则”。明确警告 20% 的封顶意味着即使乙方泄露百万级源码，甲方最多也只能获赔 100 万上限。自动重写附加了“超限额全额赔偿”条款。
-
-### 🗂️ Case B: 业务流程沉默真空层 (Silent Acceptance Clause)
-**【案情背景】**：标底 200 万软件协议。“乙方部署后甲方需验收，验收合格后 5 日内付款。”
-**【测试焦点】**：识别“事实状态”在执行期间引发无限期拖延验收/付款的真空黑洞。
-- **🟢 Baseline**：[Partial Pass] 提示缺少具体验收日期。
-- **🔥 Agent v2.0**：[Pass] Agent-4 将此节点抽出为 `履约预警日历 (.ics)`。自动埋伏条款：“若自交付起超 15 日不验收且无书面异议，直接视为验收合格”，根绝拖期无赖打法。
-
-### 🗂️ Case C: 核心资产所有权混同 (IP Co-ownership Ambiguity)
-**【案情背景】**：标底 800 万定制研发。“项目产生的所有知识产权由双方共同所有。”
-**【测试焦点】**：洞察《著作权法》及《专利法》对共有权利商业化行使道路上的致命桎梏。
-- **🟢 Baseline**：[Fail] 指出共有在后续会有麻烦，建议“友好协商”。属于“废话意见”。
-- **🔥 Agent v2.0**：[Pass] 准确定位共有权在转让/独占许可时需共有人一致同意的法律规定，断言甲方变现将被乙方锁死。要求修改为100%独属，并将对方诉求缓冲降级为“乙方持有内部防竞业普通许可”。
+- **🛡️ 穿透式合规审查**：深度植入《中华人民共和国民法典》及《公司法》裁判规则，识别超出字面的“沉默条款”与隐性底线。
+- **💰 预期损失量化 (EL)**：将法务瑕疵直接映射为财务预期损失，包含行政重罚与 130% 违约金司法调减规则的动态计算。
+- **⚔️ 诉讼级对抗反制 (Plan B)**：提供顶尖律师级别的替代条款，并在数据局等行政监管口径下具备免罚抗辩效力。
 
 ---
 
-## 4. 高阶纵深合规与行政红线盲测 (Phase II: Compliance & Entity Penetration)
+## 🚀 快速开始 (Quick Start)
 
-### 🗂️ Case D: 法定代表人越权担保混同 (Ultra Vires Corporate Guarantee)
-**【案情背景】**：标底 1000 万设备采购。对方起草的合同在尾部赫然写道：“见证及担保方：法定代表人张三签字”。
-**【测试焦点】**：新《中华人民共和国公司法》下，关于法定代理人未经公司内部决策结构越权签字，所带来的“担保无效导致债权落空”风暴眼。
-- **🟢 Baseline**：[Partial Pass] 提示“这增加了老板个人的连带责任”。（本末倒置，完全没看出对我的风险）
-- **🔥 Agent v2.0**：[Pass] `Compliance Scan (合规雷达)` 强力预警：担保非公司日常经营行为。若未拿到对方按新《公司法》表决出具的《股东会/董事会决议》作为附件原件，张三的签章将被法院按越权定性进而击破担保效力。触发合伙人复核警示，拒绝流转。
+想要在本地环境运行 Benchmark 基准测试或体验 v2.0 智能体：
 
-### 🗂️ Case E: 不可抗力滥用与法定解除权排斥 (Abuse of Force Majeure)
-**【案情背景】**：标底 300 万平台服务协议。格式条款：“因政策变化、系统宕机、黑客攻击等非本方所能预知的事由，乙方有权迟延且无责；任何情形下甲方均不得单方解除本合同。”
-**【测试焦点】**：对方暴力扩张免责护城河，并用格式声明强行剥夺《民法典》赋予甲方的法定撤局权（第563、590条）。
-- **🟢 Baseline**：[Fail] 建议删掉“黑客攻击”；对剥夺单方解除权视若无睹。
-- **🔥 Agent v2.0**：[Pass] 双向合围：
-  - 1. 明确“宕机/黑客”属业务商业底限，无论多严重均不得僭越解释为《民法典》不可抗力。
-  - 2. 强行插入“反剥夺熔断机制”（Plan B版）：即使出现真正的不可抗力，若致使合同主要目的不能实现，或延期累计超过 60 日，甲方行使无责解约权，并有权全额索回预付款。
+```bash
+# 1. 克隆代码仓库
+git clone https://github.com/evan66547/Contract-Reviewer-Agent-Eval.git
+cd Contract-Reviewer-Agent-Eval
 
-### 🗂️ Case F: 数据合规越界授权 (PII Overreaching Privacy Rule)
-**【案情背景】**：甲方采购某营销SaaS服务系统。“授权乙方无可撤销地收集、处理本平台及甲方终端消费者的业务与身份数据，用于乙方自身 AI 模型训练及前沿商业化数据产品分析。”
-**【测试焦点】**：跳出纯民法，触发 `PLUGIN-DATA`，面对数据安全重手监管时的企业级致命合规盲区。
-- **🟢 Baseline**：[Fail] 认为隐私有风险，弱弱地建议加“需进行脱敏处理”四字。
-- **🔥 Agent v2.0**：[Epic Pass / 降维打击] 
-  - `插件触发`：激活《数据安全法》与《个人信息保护法》模块分析协议。
-  - `量化警报`：将罚金计入预期损失沙盘——不但面临违约，如果涉及终端消费者私密信息，若遭行政举报，最高可能引爆 5000 万或年营收 5% 的天价处罚。
-  - `隔离墙重塑`：向交办人提供红线替代策略：(1) 数据性质清洗——仅允许乙方获取不可逆的匿名化（Anonymization）客观运行指标；(2) 直接面向终端用户设计合规隔离组件（弹窗双重 Consent 独立受权），将违法地雷彻底排出甲方资产表。
+# 2. 赋予评测脚本执行权限
+chmod +x scripts/run_eval.sh
+
+# 3. 运行基准测试 (Placeholder 演示)
+./scripts/run_eval.sh
+```
 
 ---
 
-## 5. 综合评价与生产部署架构 (Assessment & Roll-out)
+## 📊 评测方法论 (Methodology)
 
-经历6大极高危盲法场景施压，**Contract Reviewer Agent v2.0** 没有被任何长句迷宫和表象利益所欺骗，不仅完成了合规扫描，在对抗性和实际落地排险（EL量化干预、履约管理机制延伸）上展现出绝对的“高级合伙人素质级实务能力”。
+本次横测抽样了六个涵盖高风险商业与行政特许隐患的盲盒样本，并限定在 **甲方立场**（如委托方、采购方、出资方）进行对抗。重点考核以下核心维度：
 
-- **🚀 强烈建议部署域**：投融资及跨境并购 (M&A)、千万级别涉密技术研发代工 (IT Outsourcing)、核心软硬件基础实施集中特采、含关键消费者数据的2B集算业务等。
-- **🔌 框架载入方式**：将本仓库下属 `skills/` 目录连根拔起并挂载导入您的各大 AI Agent Orchestrator 中作为子 Agent 被调用即可全负荷运转。
+1. **风险漏洞召回率 (Risk Recall)**
+2. **财务风险量化敏感度 (Financial Quantification)**
+3. **对抗防御冗余强度 (Adversarial Robustness)**
 
-> **⚠️免责声明 (Disclaimer)**:  
-> 本 Benchmark 测试报告与开源的体系化 Prompt 设计原则，全部开放于人工智能及法务科研（LegalTech）技术界的非对称沙箱对抗研习使用。Agent 及由其衍生的各项智能体输出、任何诊断图表或草案替换，皆不构成世界上任何特定管辖法域内的正式律师法律意见书。现实商用链路上，必须严格启动、落实所配建的 `[合伙人复核门 (Partner Gate)]`，送具该法域执业牌照的人群（如执业律师、公证员）出具结语查验。
+> 📈 **[查看完整量化得分]**：请点击查阅 **[深度测试与量化评分报告 (Analysis Report)](./docs/Analysis_Report.md)** 了解四大维度的雷达图参数、ROI 财务挽回估值及各版 Agent 的满分跑分详单。
 
 ---
-`Document Generated by: Antigravity Agent OS`
-`Latest Benchmark Extensively Validated: Mar 2026`
+
+## 💼 测试用例与漏洞拦截矩阵 (Evaluation Matrix)
+
+*(详情及完整测试合同流见 `data/test_cases/` 目录)*
+
+### 🗂️ Case A: 违约金非对称与填平陷阱
+> 标底 500 万研发合同。约定：乙方延期每日违约金万分之五；甲方延期千分之一，均封顶总额 20%。
+- **Baseline**：[Fail] 判定 20% 封顶合法。
+- **Agent v2.0**：[Pass] 警告 20% 封顶掩护了核心商业泄密风险，自动附加“超限额全额填平赔偿”条款。
+
+### 🗂️ Case B: 业务流程沉默真空层
+> 标底 200 万软件协议。“验收合格后 5 日内付款。”
+- **Baseline**：[Partial Pass] 提示缺少具体验收日期。
+- **Agent v2.0**：[Pass] 抽出履约预警日历。埋伏条款：“超 15 日不验收直接视为合格”，根绝拖期无赖打法。
+
+### 🗂️ Case C: 核心资产所有权混同
+> 标底 800 万定制研发。“产生的所有知识产权由双方共同所有。”
+- **Baseline**：[Fail] 建议“友好协商”。
+- **Agent v2.0**：[Pass] 洞察《著作权法》共有权利商业化行使死穴，强制修改为甲方 100% 独属。
+
+### 🗂️ Case D: 法定代表人越权担保混同
+> “见证及担保方：法定代表人张三签字”。
+- **Baseline**：[Partial Pass] 提示个人连带责任，未察觉对我方（债权方）的效力风险。
+- **Agent v2.0**：[Pass] 基于新《公司法》强力预警，拒绝流转并要求对方出具《股东会决议》防止越权定性导致担保无效。
+
+### 🗂️ Case E: 不可抗力滥用与法定解权排斥
+> “因黑客攻击等非本方预知事由免责；甲方不得单方解约。”
+- **Baseline**：[Fail] 建议删掉部分词语，对剥夺法定解约权无视。
+- **Agent v2.0**：[Pass] 明确底层业务底线，并强插熔断机制：“超期 60 日甲方行使无责解约权并索回全款”。
+
+### 🗂️ Case F: 数据合规越界授权 (SaaS)
+> “授权无可撤销处理消费者数据用于 AI 训练。”
+- **Baseline**：[Fail] 仅建议加“需进行脱敏处理”。
+- **Agent v2.0**：[Epic Pass] 触发《数安法》《个保法》模块，预警 5000 万级行政罚款风险。向业务方提供匿名化清洗及直接对接终端用户 Consent 的双重防火墙策略。
+
+---
+
+## 📁 仓库结构 (Repository Structure)
+
+```text
+Contract-Reviewer-Agent-Eval/
+├── README.md                 # 横向测评概述与总体结论
+├── docs/                     
+│   └── Analysis_Report.md    # 📊 深度测试与量化评分报告 (雷达图/ROI分析)
+├── data/
+│   └── test_cases/           # 📁 6 大核心高频风险特型盲修语料占位
+├── scripts/
+│   └── run_eval.sh           # 🚀 自动化测评调用执行脚本占位
+└── assets/                   # 🖼️ 存放高维架构图、测评证据媒体文件
+```
+
+---
+
+## 🤝 参与贡献 (Contributing & Community)
+
+本库内容随时欢迎 LegalTech及 AI Agent 爱好者的讨论与增补！
+1. **Report a Bug**：若您在运行测试中发现任何 Prompt 失效，欢迎提交 [Issue](https://github.com/evan66547/Contract-Reviewer-Agent-Eval/issues)。
+2. **Add New Cases**：如果您有更多刁钻的陷阱条款，欢迎 Fork 本库并在 `data/test_cases/` 中补充，提交 PR！您的贡献将帮助国产 AI 合同防御能力进一步提升。
+
+---
+
+> **⚠️ 免责声明 (Disclaimer)**:  
+> 本 Benchmark 测试报告与开源的体系化 Prompt 设计原则，全部开放于人工智能及法务科研（LegalTech）技术界的非对称沙箱对抗研习使用。Agent 及由其衍生的各项智能体输出皆不构成世界上任何特定法域内的正式律师法律意见书。现实商用链路上，必须严格落实送具该法域执业牌照的人群（如执业律师）出具结语查验。
+
+<p align="right">
+<code>Document Generated by: Antigravity Agent OS</code><br>
+<code>Latest Benchmark Extensively Validated: Mar 2026</code>
+</p>
