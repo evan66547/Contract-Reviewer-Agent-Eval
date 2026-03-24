@@ -1,1 +1,4 @@
 jsonschema
+openai>=1.0.0
+openpyxl
+python-dotenv
