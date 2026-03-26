@@ -46,7 +46,81 @@ def mock_llm_call(prompt, schema):
         "legal_citations": [{"law_name": "民法典", "article_number": "未知"}],
         "citation_verified": True,
         "confidence_degrade": "",
-        "defense_plan_b": "Mock Plan B"
+        "defense_plan_b": "Mock Plan B",
+        # ── ORCHESTRATOR 报告收束 Mock 数据 ──
+        "agent_findings": [
+            {
+                "agent_name": "Agent-1 合规审核",
+                "agent_role": "Compliance Agent",
+                "quality_scores": {"citation_accuracy": 22, "coverage_completeness": 20, "logical_consistency": 23, "actionability": 21},
+                "risk_items": [{
+                    "risk_id": "R-001", "risk_tag": "#强制性规范违反", "severity": "CRITICAL",
+                    "clause_location": "违约责任条款", "finding": "[Mock] 违约金限额与实际损失填平原则冲突",
+                    "legal_basis": "《民法典》第584条", "recommendation": "[Mock] 增加根本违约例外排除条款"
+                }]
+            },
+            {
+                "agent_name": "Agent-2 风险量化",
+                "agent_role": "Risk Quant Agent",
+                "quality_scores": {"citation_accuracy": 20, "coverage_completeness": 21, "logical_consistency": 22, "actionability": 19},
+                "risk_items": [{
+                    "risk_id": "R-002", "risk_tag": "#违约金过高", "severity": "HIGH",
+                    "clause_location": "第8条违约金", "finding": "[Mock] 账面违约金面临司法调减风险",
+                    "legal_basis": "司法解释130%规则", "recommendation": "[Mock] 将EL上限压至实际损失130%"
+                }]
+            },
+            {
+                "agent_name": "Agent-3 谈判策略",
+                "agent_role": "Negotiation Agent",
+                "quality_scores": {"citation_accuracy": 21, "coverage_completeness": 22, "logical_consistency": 20, "actionability": 23},
+                "risk_items": [{
+                    "risk_id": "R-003", "risk_tag": "#Plan B防御漏洞", "severity": "MEDIUM",
+                    "clause_location": "争议解决条款", "finding": "[Mock] 替代条款存在语义歧义攻击面",
+                    "legal_basis": "合同解释原则", "recommendation": "[Mock] 收紧定义条款，消除歧义空间"
+                }]
+            },
+            {
+                "agent_name": "Agent-4 生命周期",
+                "agent_role": "Lifecycle Agent",
+                "quality_scores": {"citation_accuracy": 18, "coverage_completeness": 19, "logical_consistency": 21, "actionability": 20},
+                "risk_items": [{
+                    "risk_id": "R-004", "risk_tag": "#期限黑洞", "severity": "HIGH",
+                    "clause_location": "验收条款", "finding": "[Mock] 验收期限未设上限，付款条件无法成就",
+                    "legal_basis": "《民法典》第159条", "recommendation": "[Mock] 设置15日默示验收期"
+                }]
+            },
+            {
+                "agent_name": "Agent-5 商业撮合",
+                "agent_role": "Deal-Maker Agent",
+                "quality_scores": {"citation_accuracy": 19, "coverage_completeness": 20, "logical_consistency": 22, "actionability": 22},
+                "risk_items": [{
+                    "risk_id": "R-005", "risk_tag": "#交易摩擦", "severity": "LOW",
+                    "clause_location": "整体条款", "finding": "[Mock] 法务条款过严可能增加谈判摩擦",
+                    "legal_basis": "商业惯例", "recommendation": "[Mock] 提供分期对赌折中方案"
+                }]
+            }
+        ],
+        "risk_scores": {
+            "compliance_risk": 75, "financial_risk": 60, "adversarial_risk": 45,
+            "performance_risk": 55, "commercial_risk": 30,
+            "composite_index": 75*0.30 + 60*0.25 + 45*0.20 + 55*0.15 + 30*0.10
+        },
+        "final_modification_suggestions": [
+            {
+                "priority": 1, "clause_ref": "第8条 违约责任",
+                "current_text": "[Mock] 违约金总额不超过合同总额20%",
+                "suggested_text": "[Mock] 前述违约金限额不适用于根本违约、商业秘密泄露或知识产权侵权造成的实际损失",
+                "rationale": "[Mock] 填平原则保护己方实际损失求偿权",
+                "legal_basis": "《民法典》第584条"
+            },
+            {
+                "priority": 2, "clause_ref": "第5条 验收",
+                "current_text": "[Mock] 甲方应及时组织验收",
+                "suggested_text": "[Mock] 甲方应在交付后15个工作日内完成验收，逾期未提出异议视为验收合格",
+                "rationale": "[Mock] 设置明确期限防止付款条件成就障碍",
+                "legal_basis": "《民法典》第159条"
+            }
+        ]
     }
 
 def live_llm_call(prompt, schema, model="gpt-4o"):
@@ -180,6 +254,8 @@ def main():
     parser.add_argument("--live", action="store_true", help="Use real API to generate & LLM-as-a-Judge to score")
     parser.add_argument("--model", default="gpt-4o")
     parser.add_argument("--output", default=None)
+    parser.add_argument("--report", action="store_true", help="Generate Markdown risk report via ORCHESTRATOR")
+    parser.add_argument("--report_output", default=None, help="Custom path for the risk report")
     args = parser.parse_args()
 
     schema = load_json(args.schema)
@@ -220,6 +296,15 @@ def main():
 
     if args.output:
         save_json(args.output, results)
+
+    # ── ORCHESTRATOR: 报告收束 ──
+    if args.report:
+        from report_generator import generate_risk_report
+        from datetime import datetime
+        report_path = args.report_output or f"results/risk_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        print(f"\n📄 ORCHESTRATOR: 正在生成风险报告...")
+        generate_risk_report(results, output_path=report_path)
+        print(f"✅ 风险报告已输出至: {report_path}")
 
 if __name__ == "__main__":
     main()

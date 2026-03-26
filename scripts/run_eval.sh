@@ -19,3 +19,7 @@ python3 scripts/run_eval.py \
     --input_dir data/test_cases/ \
     --schema schemas/output_schema.json \
     "$@"
+
+# Tip: Use --report to generate Markdown risk report
+# Example: bash scripts/run_eval.sh --report
+# Example: bash scripts/run_eval.sh --live --report --report_output results/my_report.md

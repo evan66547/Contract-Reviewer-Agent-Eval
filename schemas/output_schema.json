@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "AgentContractReviewOutput",
-  "description": "Output schema for the Senior Legal Contract Reviewer Agent v2.0 benchmark cases.",
+  "description": "Output schema for the Senior Legal Contract Reviewer Agent v2.0 benchmark cases, with ORCHESTRATOR report generation support.",
   "type": "object",
   "properties": {
     "risk_level": {
@@ -54,6 +54,78 @@
     "defense_plan_b": {
       "type": "string",
       "description": "The mandatory, unyielding replacement clause (Plan B) to protect the user's interests."
+    },
+    "agent_findings": {
+      "type": "array",
+      "description": "Per-agent risk findings collected by ORCHESTRATOR for report generation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "agent_name": {
+            "type": "string",
+            "description": "Agent identifier, e.g. 'Agent-1 合规审核'"
+          },
+          "agent_role": {
+            "type": "string",
+            "description": "Agent role description"
+          },
+          "quality_scores": {
+            "type": "object",
+            "description": "ORCHESTRATOR quality audit scores for this agent",
+            "properties": {
+              "citation_accuracy": { "type": "number", "minimum": 0, "maximum": 25 },
+              "coverage_completeness": { "type": "number", "minimum": 0, "maximum": 25 },
+              "logical_consistency": { "type": "number", "minimum": 0, "maximum": 25 },
+              "actionability": { "type": "number", "minimum": 0, "maximum": 25 }
+            }
+          },
+          "risk_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "risk_id": { "type": "string" },
+                "risk_tag": { "type": "string" },
+                "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+                "clause_location": { "type": "string" },
+                "finding": { "type": "string" },
+                "legal_basis": { "type": "string" },
+                "recommendation": { "type": "string" }
+              },
+              "required": ["risk_tag", "severity", "finding", "recommendation"]
+            }
+          }
+        },
+        "required": ["agent_name", "agent_role", "risk_items"]
+      }
+    },
+    "risk_scores": {
+      "type": "object",
+      "description": "Five-dimensional risk scoring by ORCHESTRATOR",
+      "properties": {
+        "compliance_risk": { "type": "number", "minimum": 0, "maximum": 100 },
+        "financial_risk": { "type": "number", "minimum": 0, "maximum": 100 },
+        "adversarial_risk": { "type": "number", "minimum": 0, "maximum": 100 },
+        "performance_risk": { "type": "number", "minimum": 0, "maximum": 100 },
+        "commercial_risk": { "type": "number", "minimum": 0, "maximum": 100 },
+        "composite_index": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "final_modification_suggestions": {
+      "type": "array",
+      "description": "Prioritized clause-level modification suggestions.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "priority": { "type": "integer" },
+          "clause_ref": { "type": "string" },
+          "current_text": { "type": "string" },
+          "suggested_text": { "type": "string" },
+          "rationale": { "type": "string" },
+          "legal_basis": { "type": "string" }
+        },
+        "required": ["priority", "clause_ref", "suggested_text", "rationale"]
+      }
     }
   },
   "required": [
