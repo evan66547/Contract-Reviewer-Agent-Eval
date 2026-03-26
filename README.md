@@ -106,10 +106,14 @@ python scripts/run_eval.py --live --model gpt-4o --output results/report.json
 
 > *注：表内带有极大主观标尺的 84.7% 仅作为验证能力代差演进的参考系，并不代表已通过法律界盲测。
 
+💡 **代差对比深度解析**：对普通提示词、执业律师提示词、v1.2 单体能力及 v2.1 编排架构在防守极端漏洞（如违约金封顶）上的实测穿透力对比，请查阅 👉 [多层级提示词能力代差对比测评报告](./docs/Comparative_Analysis_Case_A.md) 。
+
 ### 核心亮点 (Core Features)
 
-**🎓 Benchmark 跑分专版 (v2.0 5-Agent Framework)**
-专用于支撑本仓库 4 阶基准测试的自动化评估主干。搭载合规审核、风险量化、谈判策略、生命周期四大专业角色，外加第五名**商业撮合智能体 (Deal-Maker)**。采用基于 MCP 外联网强绑定的时效性绝缘网，杜绝引用被废止的旧法。
+**🎓 Benchmark 跑分专版 (v2.1 / 5-Agent + ORCHESTRATOR Framework)**
+专用于支撑本仓库 4 阶基准测试的自动化评估主干。搭载合规审核、风险量化、谈判策略、生命周期四大专业角色，外加第五名**商业撮合智能体 (Deal-Maker)**。
+- 采用基于 MCP 外联网强绑定的时效性绝缘网，杜绝引用被废止的旧法。
+- **ORCHESTRATOR 结构化报告引擎**：自动对各 Agent 输出结果进行 4 维度质量核查，综合生成涵盖「合规 / 财务 / 攻防 / 履约 / 商业」的**五维风险评分(Risk Scores)及七章结构化热力报告**。
 
 **🏢 Enterprise 生产专版 (v2.2 6-Agent Workflow)**
 针对真实企业法务部交付场景部署的工作流实体（独立于测评基准运行）。
@@ -128,9 +132,9 @@ pip install -r requirements.txt
 # 2. 离线 Mock 模式运行（无需 API Key）
 python scripts/run_eval.py
 
-# 3. 真实 LLM 在线评测模式
+# 3. 真实 LLM 在线评测模式 (包含 Markdown 报告生成)
 export OPENAI_API_KEY="sk-..."
-python scripts/run_eval.py --live --model gpt-4o --output results/report.json
+python scripts/run_eval.py --live --model gpt-4o --output results/report_v2.1.json --report --report_output results/risk_report_v2.1.md
 ```
 
 > 🌐 **非技术人员/律师/法务看这里**：无需配置代码！您可以直接在浏览器中使用网页版大模型（如 Gemini）加载运行 v2.0 智能体。👉 [点击查看：网页端零代码使用指南](./docs/Gemini_Web_Usage_Guide.md)
@@ -147,7 +151,8 @@ graph TD
     RAG[("📚 民法典<br>司法解释库")] -.->|"法条锚定"| A1
     A1 --> A2 --> A3 --> ORC
     A4 --> ORC
-    ORC -->|"结论收束"| OUTPUT["📊 结构化风控报告"]
+    A5["🤝 Agent-5<br>商业撮合"] --> ORC
+    ORC -->|"质量审计+五维评分"| OUTPUT["📊 七章结构化风控报告"]
     OUTPUT --> User
 ```
 

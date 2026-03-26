@@ -125,33 +125,43 @@ def mock_llm_call(prompt, schema):
 
 def live_llm_call(prompt, schema, model="gpt-4o"):
     """Call the Generation LLM to review the contract."""
-    from openai import OpenAI
-    client = OpenAI()
     system_prompt = (
         "你是一名具备15年经验的中国执业资深商业律师。请严格按照JSON Schema审查合同。"
         "必须包含: risk_level, identified_vulnerability, clause_location, expected_loss_estimation, legal_citations, citation_verified, defense_plan_b。"
     )
     user_prompt = f"合同条款：\n{prompt}\n\n要求的输出 Schema：\n{json.dumps(schema, ensure_ascii=False)}"
     
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.1,
-        response_format={"type": "json_object"}
-    )
-    return json.loads(response.choices[0].message.content)
+    if "gemini" in model.lower():
+        import google.generativeai as genai
+        m = genai.GenerativeModel(
+            model_name=model,
+            system_instruction=system_prompt,
+            generation_config=genai.GenerationConfig(
+                response_mime_type="application/json",
+                temperature=0.1,
+            )
+        )
+        response = m.generate_content(user_prompt)
+        return json.loads(response.text)
+    else:
+        from openai import OpenAI
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.1,
+            response_format={"type": "json_object"}
+        )
+        return json.loads(response.choices[0].message.content)
 
 def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
     """
     Use an LLM to blindly judge the semantic quality of the agent's output against the Ground Truth.
     This replaces the flawed difflib string-matching approach and truly evaluates "Plan B" effectiveness.
     """
-    from openai import OpenAI
-    client = OpenAI()
-    
     judge_prompt = f"""
     你是独立客观的第三方『法律基准测试裁判』。请评估受测 Agent 出具的风控报告是否真正解决了基准库(Ground Truth)中的问题。
     请你从 0 到 100 分独立给出四个维度的打分，并严格返回 JSON 格式：
@@ -173,13 +183,27 @@ def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
     4. lifecycle_score (生命周期): 是否指出了隐藏的期限黑洞？如无涉及但总体优秀也可酌情给高分。
     """
     
-    response = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": judge_prompt}],
-        temperature=0.0,
-        response_format={"type": "json_object"}
-    )
-    return json.loads(response.choices[0].message.content)
+    if "gemini" in model.lower():
+        import google.generativeai as genai
+        m = genai.GenerativeModel(
+            model_name=model,
+            generation_config=genai.GenerationConfig(
+                response_mime_type="application/json",
+                temperature=0.0,
+            )
+        )
+        response = m.generate_content(judge_prompt)
+        return json.loads(response.text)
+    else:
+        from openai import OpenAI
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": judge_prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"}
+        )
+        return json.loads(response.choices[0].message.content)
 
 # ──────────────────────────────────────────────
 # Case Evaluator
@@ -211,7 +235,7 @@ def evaluate_case(case_data, schema, live=False, model="gpt-4o"):
     # 3. LLM-as-a-Judge Scoring
     if live:
         print("  ⚖️ Calling Judge LLM for Semantic Evaluation...")
-        judge_scores = llm_as_a_judge(agent_output, case_data, model="gpt-4o") # Always use strong model as judge
+        judge_scores = llm_as_a_judge(agent_output, case_data, model=model) # Always use requested model
         r_score = judge_scores.get("recall_score", 0)
         e_score = judge_scores.get("el_precision_score", 0)
         a_score = judge_scores.get("adversarial_score", 0)
