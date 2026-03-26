@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "AgentContractReviewOutput",
-  "description": "Output schema for the Senior Legal Contract Reviewer Agent v2.0 benchmark cases, with ORCHESTRATOR report generation support.",
+  "description": "Output schema for the Senior Legal Contract Reviewer Agent v2.1 benchmark cases, with ORCHESTRATOR report generation and Agent-6 proofreading support.",
   "type": "object",
   "properties": {
     "risk_level": {
@@ -109,6 +109,29 @@
         "performance_risk": { "type": "number", "minimum": 0, "maximum": 100 },
         "commercial_risk": { "type": "number", "minimum": 0, "maximum": 100 },
         "composite_index": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "proofreading_findings": {
+      "type": "array",
+      "description": "Agent-6 legal proofreading findings: typos, grammar issues, terminology misuse, and inconsistencies.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "defect_id": { "type": "string" },
+          "defect_type": {
+            "type": "string",
+            "enum": ["typo", "grammar", "terminology", "punctuation", "inconsistency", "numbering", "style"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["FATAL_AMBIGUITY", "SERIOUS_DEFECT", "MINOR_FLAW", "STYLE_SUGGESTION"]
+          },
+          "location": { "type": "string" },
+          "original_text": { "type": "string" },
+          "issue_description": { "type": "string" },
+          "correction": { "type": "string" }
+        },
+        "required": ["defect_type", "severity", "issue_description", "correction"]
       }
     },
     "final_modification_suggestions": {

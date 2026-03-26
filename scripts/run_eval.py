@@ -98,6 +98,16 @@ def mock_llm_call(prompt, schema):
                     "clause_location": "整体条款", "finding": "[Mock] 法务条款过严可能增加谈判摩擦",
                     "legal_basis": "商业惯例", "recommendation": "[Mock] 提供分期对赌折中方案"
                 }]
+            },
+            {
+                "agent_name": "Agent-6 文书质检",
+                "agent_role": "Legal Proofreading Agent",
+                "quality_scores": {"citation_accuracy": 23, "coverage_completeness": 22, "logical_consistency": 24, "actionability": 21},
+                "risk_items": [{
+                    "risk_id": "R-006", "risk_tag": "#术语误用", "severity": "HIGH",
+                    "clause_location": "第3条 订金条款", "finding": "[Mock] 合同中将『定金』写作『订金』，法律效力截然不同",
+                    "legal_basis": "《民法典》第586条 定金罚则", "recommendation": "[Mock] 将所有『订金』替换为『定金』并明确适用定金罚则"
+                }]
             }
         ],
         "risk_scores": {
@@ -105,6 +115,22 @@ def mock_llm_call(prompt, schema):
             "performance_risk": 55, "commercial_risk": 30,
             "composite_index": 75*0.30 + 60*0.25 + 45*0.20 + 55*0.15 + 30*0.10
         },
+        "proofreading_findings": [
+            {
+                "defect_id": "PF-001", "defect_type": "terminology",
+                "severity": "FATAL_AMBIGUITY", "location": "第3条",
+                "original_text": "[Mock] 乙方应在签约时支付订金人民币伍拾万元整",
+                "issue_description": "[Mock] 『订金』与『定金』法律效力不同：定金适用双倍返还罚则，订金仅为预付款可退",
+                "correction": "[Mock] 替换为『定金』并添加『适用《民法典》第586条定金罚则』"
+            },
+            {
+                "defect_id": "PF-002", "defect_type": "grammar",
+                "severity": "SERIOUS_DEFECT", "location": "第5条",
+                "original_text": "[Mock] 如甲方未能在规定期限内完成验收并且乙方有权解除合同",
+                "issue_description": "[Mock] 句子缺少主语转换连词，『并且』前后主语暂换导致逻辑关系不清",
+                "correction": "[Mock] 改为『如甲方未能在规定期限内完成验收，则乙方有权解除合同』"
+            }
+        ],
         "final_modification_suggestions": [
             {
                 "priority": 1, "clause_ref": "第8条 违约责任",
