@@ -97,6 +97,8 @@ LLM given a "10-year senior counsel" persona, instructed to apply *Civil Code* k
 ### 🔬 TIER 3: Agent v1.2 — Monolithic Intelligence
 
 > **File**: [`skills/senior-legal-contract-reviewer-v1/SKILL.md`](./skills/senior-legal-contract-reviewer-v1/SKILL.md)
+>
+> **Bilingual Intro Layout (new)**: [`skills/senior-legal-contract-reviewer-v1.2-lite/README.md`](./skills/senior-legal-contract-reviewer-v1.2-lite/README.md)
 
 A ~2,000-word precision-engineered prompt with rigid principles: "Extreme Adversarial Defense" and "No Mechanical Balance."
 
@@ -242,6 +244,7 @@ Contract-Reviewer-Agent-Eval/
 │
 ├── 📁 skills/                                          # Agent Prompt Engineering
 │   ├── senior-legal-contract-reviewer-v1/              # v1.2 Monolithic Intelligence
+│   ├── senior-legal-contract-reviewer-v1.2-lite/       # v1.2 Lite Skill Package (Bilingual Intro)
 │   ├── senior-legal-contract-reviewer-v2/              # v2.1 ORCHESTRATOR + 6-Agent (Benchmark)
 │   └── senior-legal-contract-reviewer-v2.2-enterprise/ # v2.2 ORCHESTRATOR + 7-Agent (Enterprise)
 │

@@ -97,6 +97,8 @@
 ### 🔬 TIER 3：Agent v1.2 — 单体智能
 
 > **文件位置**：[`skills/senior-legal-contract-reviewer-v1/SKILL.md`](./skills/senior-legal-contract-reviewer-v1/SKILL.md)
+>
+> **双语项目介绍布局（新增）**：[`skills/senior-legal-contract-reviewer-v1.2-lite/README.md`](./skills/senior-legal-contract-reviewer-v1.2-lite/README.md)
 
 v1.2 是一份约 2,000 字的精心设计的提示工程产物，包含「极端对抗防御体系」和「禁止机械平衡」等刚性原则。
 
@@ -242,6 +244,7 @@ Contract-Reviewer-Agent-Eval/
 │
 ├── 📁 skills/                                          # 智能体提示词工程
 │   ├── senior-legal-contract-reviewer-v1/              # v1.2 单体智能
+│   ├── senior-legal-contract-reviewer-v1.2-lite/       # v1.2 Lite 技能包（中英双语介绍）
 │   ├── senior-legal-contract-reviewer-v2/              # v2.1 ORCHESTRATOR + 6-Agent（基准测评版）
 │   └── senior-legal-contract-reviewer-v2.2-enterprise/ # v2.2 ORCHESTRATOR + 7-Agent（企业生产版）
 │
