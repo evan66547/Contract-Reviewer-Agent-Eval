@@ -13,7 +13,7 @@
 <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/English-d9d9d9"></a>
 <a href="./README.zh-CN.md"><img alt="简体中文" src="https://img.shields.io/badge/简体中文-d9d9d9"></a>
 
-[What is this?](#-what-is-this) · [Capability Gap](#-four-tier-capability-gap-verification) · [Architecture](#-architecture-overview-by-version) · [Quick Start](#-quick-start) · [Case Study](./docs/Comparative_Analysis_Case_A.md)
+[What is this?](#-what-is-this) · [Capability Gap](#-four-tier-capability-gap-verification) · [Architecture](#-architecture-overview-by-version) · [Quick Start](#-quick-start) · [v1.2 Lite Release](./docs/releases/v1.2-lite-release.md) · [Case Study](./docs/Comparative_Analysis_Case_A.md)
 
 </div>
 

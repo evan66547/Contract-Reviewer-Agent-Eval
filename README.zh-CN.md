@@ -13,7 +13,7 @@
 <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/English-d9d9d9"></a>
 <a href="./README.zh-CN.md"><img alt="简体中文" src="https://img.shields.io/badge/简体中文-d9d9d9"></a>
 
-[这是什么？](#-这是什么) · [四层代差验证](#-四层能力代差验证) · [架构概览](#-各版本架构概览) · [极速起步](#-极速起步) · [代差对比报告](./docs/Comparative_Analysis_Case_A.md)
+[这是什么？](#-这是什么) · [四层代差验证](#-四层能力代差验证) · [架构概览](#-各版本架构概览) · [极速起步](#-极速起步) · [v1.2 Lite 发布页](./docs/releases/v1.2-lite-release.zh-CN.md) · [代差对比报告](./docs/Comparative_Analysis_Case_A.md)
 
 </div>
 
