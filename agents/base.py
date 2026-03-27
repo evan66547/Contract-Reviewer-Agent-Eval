@@ -1,15 +1,54 @@
 """Base agent class and LLM backend abstraction."""
 
 import json
+import re
 from dataclasses import dataclass
+
+
+def _strip_thinking(text: str) -> str:
+    """Remove <think>...</think> blocks and markdown code fences from reasoning-model outputs."""
+    text = re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL).strip()
+    # Strip ```json ... ``` code fences
+    m = re.search(r"```(?:json)?\s*\n?(.*?)\n?```", text, flags=re.DOTALL)
+    if m:
+        text = m.group(1).strip()
+    return text
+
+
+def _robust_json_loads(text: str) -> dict:
+    """Parse JSON with fallbacks for common LLM output issues."""
+    text = _strip_thinking(text)
+    # 1. Direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # 2. Extract first { ... } block (handles trailing text / "Extra data")
+    depth = 0
+    start = text.find("{")
+    if start >= 0:
+        for i, c in enumerate(text[start:], start):
+            if c == "{":
+                depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start : i + 1])
+                    except json.JSONDecodeError:
+                        break
+    # 3. Last resort: raise
+    return json.loads(text)
 
 
 @dataclass
 class LLMBackend:
-    """Abstraction over OpenAI / Gemini API calls."""
+    """Abstraction over OpenAI / Gemini / OpenAI-compatible API calls."""
 
     model: str = "gpt-4o"
     temperature: float = 0.1
+    base_url: str | None = None  # Custom endpoint for OpenAI-compatible APIs
+    api_key: str | None = None  # Custom API key
 
     def call(self, system_prompt: str, user_prompt: str) -> dict:
         """Send a structured JSON request to the LLM and return parsed dict."""
@@ -17,12 +56,17 @@ class LLMBackend:
             return self._call_gemini(system_prompt, user_prompt)
         return self._call_openai(system_prompt, user_prompt)
 
-    # ── OpenAI ──────────────────────────────────────────
+    # ── OpenAI / OpenAI-compatible ──────────────────────
 
     def _call_openai(self, system_prompt: str, user_prompt: str) -> dict:
         from openai import OpenAI
 
-        client = OpenAI()
+        kwargs = {}
+        if self.base_url:
+            kwargs["base_url"] = self.base_url
+        if self.api_key:
+            kwargs["api_key"] = self.api_key
+        client = OpenAI(**kwargs)
         response = client.chat.completions.create(
             model=self.model,
             messages=[
@@ -32,7 +76,7 @@ class LLMBackend:
             temperature=self.temperature,
             response_format={"type": "json_object"},
         )
-        return json.loads(response.choices[0].message.content)
+        return _robust_json_loads(response.choices[0].message.content)
 
     # ── Gemini ──────────────────────────────────────────
 

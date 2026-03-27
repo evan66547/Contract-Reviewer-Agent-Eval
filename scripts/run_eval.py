@@ -11,16 +11,53 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 
 from jsonschema import ValidationError, validate
 
 # Add project root to path for agents package
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.join(_SCRIPT_DIR, "..")
+sys.path.insert(0, _PROJECT_ROOT)
+os.chdir(_PROJECT_ROOT)
 
 # ──────────────────────────────────────────────
 # Utility Functions
 # ──────────────────────────────────────────────
+
+
+def _strip_thinking(text: str) -> str:
+    """Remove <think>...</think> blocks and markdown code fences from reasoning-model outputs."""
+    text = re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL).strip()
+    # Strip ```json ... ``` code fences
+    m = re.search(r"```(?:json)?\s*\n?(.*?)\n?```", text, flags=re.DOTALL)
+    if m:
+        text = m.group(1).strip()
+    return text
+
+
+def _robust_json_loads(text: str) -> dict:
+    """Parse JSON with fallbacks for common LLM output issues."""
+    text = _strip_thinking(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    depth = 0
+    start = text.find("{")
+    if start >= 0:
+        for i, c in enumerate(text[start:], start):
+            if c == "{":
+                depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start : i + 1])
+                    except json.JSONDecodeError:
+                        break
+    return json.loads(text)
 
 
 def load_json(filepath):
@@ -238,7 +275,7 @@ def mock_llm_call(prompt, schema):
     }
 
 
-def live_llm_call(prompt, schema, model="gpt-4o"):
+def live_llm_call(prompt, schema, model="gpt-4o", base_url=None, api_key=None):
     """Call the Generation LLM to review the contract."""
     system_prompt = (
         "你是一名具备15年经验的中国执业资深商业律师。请严格按照JSON Schema审查合同。"
@@ -262,7 +299,12 @@ def live_llm_call(prompt, schema, model="gpt-4o"):
     else:
         from openai import OpenAI
 
-        client = OpenAI()
+        kwargs = {}
+        if base_url:
+            kwargs["base_url"] = base_url
+        if api_key:
+            kwargs["api_key"] = api_key
+        client = OpenAI(**kwargs)
         response = client.chat.completions.create(
             model=model,
             messages=[
@@ -272,10 +314,12 @@ def live_llm_call(prompt, schema, model="gpt-4o"):
             temperature=0.1,
             response_format={"type": "json_object"},
         )
-        return json.loads(response.choices[0].message.content)
+        return _robust_json_loads(response.choices[0].message.content)
 
 
-def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
+def llm_as_a_judge(
+    agent_output, case_data, model="gpt-4o", base_url=None, api_key=None
+):
     """
     Use an LLM to blindly judge the semantic quality of the agent's output against the Ground Truth.
     This replaces the flawed difflib string-matching approach and truly evaluates "Plan B" effectiveness.
@@ -316,14 +360,19 @@ def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
     else:
         from openai import OpenAI
 
-        client = OpenAI()
+        kwargs = {}
+        if base_url:
+            kwargs["base_url"] = base_url
+        if api_key:
+            kwargs["api_key"] = api_key
+        client = OpenAI(**kwargs)
         response = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": judge_prompt}],
             temperature=0.0,
             response_format={"type": "json_object"},
         )
-        return json.loads(response.choices[0].message.content)
+        return _robust_json_loads(response.choices[0].message.content)
 
 
 # ──────────────────────────────────────────────
@@ -331,7 +380,15 @@ def llm_as_a_judge(agent_output, case_data, model="gpt-4o"):
 # ──────────────────────────────────────────────
 
 
-def evaluate_case(case_data, schema, live=False, model="gpt-4o", orchestrate=False):
+def evaluate_case(
+    case_data,
+    schema,
+    live=False,
+    model="gpt-4o",
+    orchestrate=False,
+    base_url=None,
+    api_key=None,
+):
     case_id = case_data.get("case_id", "?")
     case_name = case_data.get("name", "Unknown")
     print(f"\n[{case_id}] Evaluating: {case_name}")
@@ -345,12 +402,16 @@ def evaluate_case(case_data, schema, live=False, model="gpt-4o", orchestrate=Fal
         from agents.orchestrator import Orchestrator
 
         print("  🧠 Running ORCHESTRATOR + 6-Agent parallel pipeline...")
-        backend = LLMBackend(model=model, temperature=0.1)
+        backend = LLMBackend(
+            model=model, temperature=0.1, base_url=base_url, api_key=api_key
+        )
         orc = Orchestrator(backend, max_workers=6)
         agent_output = orc.run(contract_text)
     elif live:
         print("  ⏳ Calling Generation LLM (single-call mode)...")
-        agent_output = live_llm_call(contract_text, schema, model)
+        agent_output = live_llm_call(
+            contract_text, schema, model, base_url=base_url, api_key=api_key
+        )
     else:
         agent_output = mock_llm_call(contract_text, schema)
 
@@ -367,8 +428,8 @@ def evaluate_case(case_data, schema, live=False, model="gpt-4o", orchestrate=Fal
     if live:
         print("  ⚖️ Calling Judge LLM for Semantic Evaluation...")
         judge_scores = llm_as_a_judge(
-            agent_output, case_data, model=model
-        )  # Always use requested model
+            agent_output, case_data, model=model, base_url=base_url, api_key=api_key
+        )
         r_score = judge_scores.get("recall_score", 0)
         e_score = judge_scores.get("el_precision_score", 0)
         a_score = judge_scores.get("adversarial_score", 0)
@@ -425,6 +486,12 @@ def main():
         help="Enable true multi-agent orchestration (6 parallel agents)",
     )
     parser.add_argument("--model", default="gpt-4o")
+    parser.add_argument(
+        "--base-url", default=None, help="Custom OpenAI-compatible API base URL"
+    )
+    parser.add_argument(
+        "--api-key", default=None, help="Custom API key (overrides OPENAI_API_KEY env)"
+    )
     parser.add_argument("--output", default=None)
     parser.add_argument(
         "--report",
@@ -466,6 +533,8 @@ def main():
             live=args.live,
             model=args.model,
             orchestrate=args.orchestrate,
+            base_url=args.base_url,
+            api_key=args.api_key,
         )
         results.append(result)
 

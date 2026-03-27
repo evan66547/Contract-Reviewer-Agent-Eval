@@ -226,9 +226,12 @@ class Orchestrator:
     def _extract_plan_b(self, raw: dict) -> str:
         """Get Plan B from Agent-3."""
         a3 = raw.get("Agent-3 谈判策略", {})
-        return a3.get(
-            "defense_plan_b", a3.get("risk_items", [{}])[0].get("recommendation", "")
-        )
+        if a3.get("defense_plan_b"):
+            return a3["defense_plan_b"]
+        items = a3.get("risk_items", [])
+        if items:
+            return items[0].get("recommendation", "")
+        return ""
 
     def _extract_el(self, raw: dict) -> dict:
         """Get EL estimation from Agent-2."""
