@@ -128,10 +128,15 @@ class Orchestrator:
 
     def _build_agent_findings(self, raw: dict) -> list:
         """Build the agent_findings array with quality audit scores."""
+        valid_sev = {"CRITICAL", "HIGH", "MEDIUM", "LOW"}
         findings = []
         for agent in self.agents:
             result = raw.get(agent.name, {})
             risk_items = result.get("risk_items", [])
+            # Normalize severity values to match schema enum
+            for item in risk_items:
+                if item.get("severity") not in valid_sev:
+                    item["severity"] = "MEDIUM"
 
             # Quality audit: score each agent's output
             quality = self._audit_agent_quality(agent.name, result)
@@ -269,10 +274,49 @@ class Orchestrator:
                     return item["clause_location"]
         return "N/A"
 
+    _SEVERITY_MAP = {
+        "CRITICAL": "FATAL_AMBIGUITY",
+        "HIGH": "SERIOUS_DEFECT",
+        "MEDIUM": "MINOR_FLAW",
+        "LOW": "STYLE_SUGGESTION",
+        "SAFE": "STYLE_SUGGESTION",
+    }
+
+    _DEFECT_TYPE_MAP = {
+        "consistency": "inconsistency",
+        "format": "style",
+        "spelling": "typo",
+        "formatting": "style",
+        "reference": "numbering",
+    }
+
     def _extract_proofreading(self, raw: dict) -> list:
-        """Get proofreading findings from Agent-6."""
+        """Get proofreading findings from Agent-6, normalizing enum values."""
         a6 = raw.get("Agent-6 文书质检", {})
-        return a6.get("proofreading_findings", [])
+        findings = a6.get("proofreading_findings", [])
+        valid_sev = {
+            "FATAL_AMBIGUITY",
+            "SERIOUS_DEFECT",
+            "MINOR_FLAW",
+            "STYLE_SUGGESTION",
+        }
+        valid_dt = {
+            "typo",
+            "grammar",
+            "terminology",
+            "punctuation",
+            "inconsistency",
+            "numbering",
+            "style",
+        }
+        for f in findings:
+            sev = f.get("severity", "")
+            if sev not in valid_sev:
+                f["severity"] = self._SEVERITY_MAP.get(sev, "MINOR_FLAW")
+            dt = f.get("defect_type", "")
+            if dt not in valid_dt:
+                f["defect_type"] = self._DEFECT_TYPE_MAP.get(dt, "style")
+        return findings
 
     def _build_modification_suggestions(self, raw: dict) -> list:
         """Build prioritized modification suggestions from all agent recommendations."""
