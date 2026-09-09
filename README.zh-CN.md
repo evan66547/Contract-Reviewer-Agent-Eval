@@ -12,6 +12,10 @@
 | Plan B 防御 | 诉讼级替代条款 |
 | 生命周期 | 履约期限与触发节点 |
 
+<p align="center">
+  <img src="docs/assets/architecture.png" alt="ORCHESTRATOR + 6 Agent 输出七章风控报告" width="900" />
+</p>
+
 **声明：** 深层文档中的得分表为自评架构投影，**非**经第三方审计的营销背书。
 
 ## 极速起步

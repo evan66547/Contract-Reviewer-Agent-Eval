@@ -13,6 +13,10 @@
 | Plan B defense | Litigation-ready alternative clauses |
 | Lifecycle | Deadlines and trigger nodes |
 
+<p align="center">
+  <img src="docs/assets/architecture.png" alt="ORCHESTRATOR + 6 agents producing a seven-chapter risk report" width="900" />
+</p>
+
 **Disclaimer:** Scores in deeper docs are self-reported architecture projections — not third-party audited marketing claims.
 
 ## Quick start
