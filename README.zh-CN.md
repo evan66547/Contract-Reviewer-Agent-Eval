@@ -44,6 +44,14 @@ scripts/ · schemas/ · docs/
 - [代差对比（Case A）](./docs/Comparative_Analysis_Case_A.md)
 - [English README](./README.md)
 
+## 安全
+
+见 [SECURITY.md](./SECURITY.md)。
+
+## 贡献
+
+见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
 ## 许可证
 
 [MIT](./LICENSE)
