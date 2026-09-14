@@ -53,6 +53,14 @@ docs/            # deep dives + full README archive
 - [Comparative analysis (Case A)](./docs/Comparative_Analysis_Case_A.md)
 - [Chinese README](./README.zh-CN.md)
 
+## Security
+
+See [SECURITY.md](./SECURITY.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## License
 
 [MIT](./LICENSE)
